@@ -47,13 +47,13 @@ file_key <- tibble(filename=intake_files) %>%
   mutate(nutrient=gsub(".csv", "", nutrient),
          nutrient=recode(nutrient,
                          "adsugar"="Added sugar",
-                         "ala"="???????????",
+                         "ala"="ala-------",
                          "alcohol"="Alcohol",
                          "alphacarot"="alpha-Carotene",
                          "b12"="Vitamin B12",
                          "bcarot"="beta-Carotene",
                          "betacarot"="beta-Carotene",
-                         "betacrypt"="???????????",
+                         "betacrypt"="betacrypt-------",
                          "calc"="Calcium",
                          "carb"="Carbohydrates",
                          "chol"="Cholestral",
@@ -66,23 +66,23 @@ file_key <- tibble(filename=intake_files) %>%
                          "iod"="Iodine",
                          "iodine"="Iodine",
                          "iron"="Iron",
-                         "la"="???????????",
-                         "lutzea"="???????????",
-                         "lyco"="???????????",
+                         "la"="Lanthanum",
+                         "lutzea"="lutzea-------",
+                         "lyco"="lyco-------",
                          "mang"="Manganese",
                          "mg"="Magnesium",
-                         "mufa"="???????????",
-                         "na"="???????????",
+                         "mufa"="Monounsaturated fatty acids",
+                         "na"="Sodium",
                          "niac"="Niacin",
                          "omega3"="Omega-3 fatty acids",
                          "omega6"="Omega-6 fatty acids",
                          "phos"="Phosphate",
-                         "plantomega3"="???????????",
+                         "plantomega3"="Plant-based omega-3 fatty acids",
                          "pota"="Potassium",
                          "protein"="Protein",
                          "pufa"="Polyunsaturated fatty acids",
-                         "retinol"="???????????",
-                         "retol"="???????????",
+                         "retinol"="retinol-------",
+                         "retol"="retol-------",
                          "ribo"="Riboflavin",
                          "satfat"="Saturated fat",
                          "se"="Selenium",
@@ -91,7 +91,7 @@ file_key <- tibble(filename=intake_files) %>%
                          "sugar"="Sugar",
                          "tfa"="Total fat",
                          "tfat"="Total fat",
-                         "theo"="???????????",
+                         "theo"="theo-------",
                          "thia"="Thiamine",
                          "vita"="Vitamin A",
                          "vitb12"="Vitamin B12",
@@ -115,3 +115,22 @@ sort(unique(file_key$nutrient))
 
 # Export file key
 write.csv(file_key, file=file.path(datadir, "SPADE_file_key.csv"), row.names=F)
+
+
+# Plot data
+################################################################################
+
+# Plot
+g <- ggplot(file_key, aes(x=country, y=nutrient)) +
+  facet_wrap(~sex) +
+  geom_raster() +
+  # Labels
+  labs(x="", y="", title="Data coverage") +
+  # Theme
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+g
+
+
+
+
