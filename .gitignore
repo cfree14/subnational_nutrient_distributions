@@ -3,5 +3,8 @@
 .RData
 .Ruserdata
 
-# Ignore
+# Ignore folders
 drafts
+
+# Ignore large files
+data/nhanes_spade_output.Rds
