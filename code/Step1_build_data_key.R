@@ -15,6 +15,9 @@ inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Ch
 datadir <- "data"
 plotdir <- "figures"
 
+# Read nutrient key
+nutr_key <- readxl::read_excel(file.path(datadir, "SPADE_nutrient_key.xlsx"))
+
 
 # Merge data
 ################################################################################
@@ -40,24 +43,24 @@ file_key <- tibble(filename=intake_files) %>%
   # Recode sex
   mutate(sex=recode(sex,
                     "c"="Children",
-                    "hw"="H women",
-                    "m"="Men",
-                    "w"="Women")) %>%
+                    "hw"="Females",
+                    "m"="Males",
+                    "w"="Females")) %>%
   # Recode nutrient
   mutate(nutrient=gsub(".csv", "", nutrient),
          nutrient=recode(nutrient,
                          "adsugar"="Added sugar",
-                         "ala"="ala-------",
+                         "ala"="alpha-linolenic acid",
                          "alcohol"="Alcohol",
                          "alphacarot"="alpha-Carotene",
                          "b12"="Vitamin B12",
                          "bcarot"="beta-Carotene",
                          "betacarot"="beta-Carotene",
-                         "betacrypt"="betacrypt-------",
+                         "betacrypt"="beta-cryptoxanthin",
                          "calc"="Calcium",
                          "carb"="Carbohydrates",
-                         "chol"="Cholestral",
-                         "cholest"="Cholestral",
+                         "chol"="Choline",
+                         "cholest"="Cholesterol",
                          "cu"="Copper",
                          "energy"="Energy",
                          "fat"="Fat",
@@ -66,9 +69,9 @@ file_key <- tibble(filename=intake_files) %>%
                          "iod"="Iodine",
                          "iodine"="Iodine",
                          "iron"="Iron",
-                         "la"="Lanthanum",
-                         "lutzea"="lutzea-------",
-                         "lyco"="lyco-------",
+                         "la"="Linoleic acid",
+                         "lutzea"="Lutein and zeaxanthin",
+                         "lyco"="Lycopene",
                          "mang"="Manganese",
                          "mg"="Magnesium",
                          "mufa"="Monounsaturated fatty acids",
@@ -81,19 +84,19 @@ file_key <- tibble(filename=intake_files) %>%
                          "pota"="Potassium",
                          "protein"="Protein",
                          "pufa"="Polyunsaturated fatty acids",
-                         "retinol"="retinol-------",
-                         "retol"="retol-------",
+                         "retinol"="Retinol",
+                         "retol"="Retinol",
                          "ribo"="Riboflavin",
                          "satfat"="Saturated fat",
                          "se"="Selenium",
                          "sfa"="Saturated fat",
                          "sucrose"="Sucrose",
                          "sugar"="Sugar",
-                         "tfa"="Total fat",
-                         "tfat"="Total fat",
-                         "theo"="theo-------",
+                         "tfa"="Trans fat",
+                         "tfat"="Trans fat",
+                         "theo"="Theobromine",
                          "thia"="Thiamine",
-                         "vita"="Vitamin A",
+                         "vita"="Vitamin A (RAE)",
                          "vitb12"="Vitamin B12",
                          "vitb6"="Vitamin B6",
                          "vitc"="Vitamin C",
@@ -103,15 +106,31 @@ file_key <- tibble(filename=intake_files) %>%
                          "zinc"="Zinc")) %>%
   # Add ISO3
   mutate(country=countrycode(country, "country.name", "country.name"),
-         iso3=countrycode(country, "country.name", "iso3c")) %>%
+         iso3=countrycode(country, "country.name", "iso3c"),
+         continent=countrycode(country, "country.name", "continent")) %>%
   # Arrange
-  select(filename, country, iso3, sex, nutrient, everything())
+  select(filename, continent, country, iso3, sex, nutrient, everything()) %>%
+  # Remove duplicates
+  filter(!grepl("_h_w_", filename) & !filename%in%c("usa_m_vitb12.csv", "usa_w_vitb12.csv")) %>%
+  # Remove Theobromine
+  filter(nutrient!="Theobromine") %>%
+  # Add units and other names
+  left_join(nutr_key, by="nutrient")
 
 
 # Inspect
+freeR::complete(file_key)
+table(file_key$continent)
 table(file_key$country)
 table(file_key$sex)
 sort(unique(file_key$nutrient))
+
+# Only 1 file per country, sex, nutrient?
+check1 <- file_key %>%
+  group_by(country, iso3, sex, nutrient) %>%
+  summarize(n=n(),
+            files=paste(sort(unique(filename)), collapse = ", ")) %>%
+  filter(n!=1)
 
 # Export file key
 write.csv(file_key, file=file.path(datadir, "SPADE_file_key.csv"), row.names=F)
@@ -122,7 +141,7 @@ write.csv(file_key, file=file.path(datadir, "SPADE_file_key.csv"), row.names=F)
 
 # Plot
 g <- ggplot(file_key, aes(x=country, y=nutrient)) +
-  facet_wrap(~sex) +
+  facet_grid(type1+type2~sex, space="free_y", scale="free_y") +
   geom_raster() +
   # Labels
   labs(x="", y="", title="Data coverage") +

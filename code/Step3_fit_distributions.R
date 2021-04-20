@@ -14,94 +14,199 @@ library(fitdistrplus)
 # Directories
 inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
 datadir <- "data"
+outdir <- "data/temp"
 plotdir <- "figures"
 
 # Read file key
 file_key <- read.csv(file.path(datadir, "SPADE_file_key.csv"), as.is=T)
 
-# Merge data
+# Read nutrient key
+nutr_key <- readxl::read_excel(file.path(datadir, "SPADE_nutrient_key.xlsx"))
+
+
+# Function to fit data
 ################################################################################
 
-# Define age groups
-age_group_lo <- c(0, seq(5,100,5))
-age_group_hi <- c(seq(4,99,5), Inf)
-age_groups <- paste(age_group_lo, age_group_hi, sep="-")
-age_group_breaks <- c(-Inf,age_group_hi)
+# Fit distributions
+country <- "Bangladesh"
+fit_dists <- function(country){
 
-# Loop through files
-i <- j <- 1
-fits <- map_df(1:nrow(file_key), function(i) {
+  # Country
+  country_do <- country
+  files_do <- file_key %>%
+    filter(country==country_do)
+  iso_do <- unique(files_do$iso3)
 
-  # Read data
-  data_orig <- read.csv(file.path(inputdir, file_key$filename[i]), as.is=T)
+  # Define age groups
+  age_group_lo <- c(0, seq(5,100,5))
+  age_group_hi <- c(seq(4,99,5), Inf)
+  age_groups <- paste(age_group_lo, age_group_hi, sep="-")
+  age_group_breaks <- c(-Inf,age_group_hi)
 
-  # File meta-data
-  country <- file_key$country[i]
-  iso3 <- file_key$ciso3[i]
-  nutrient <- file_key$nutrient[i]
-  sex <- file_key$sex[i]
+  # Loop through files
+  i <- j <- 1
+  fits <- map_df(1:nrow(files_do), function(i) {
 
-  # Format data
-  data <- data_orig %>%
-    # Rename
-    rename(id=X, age_yr=age, intake=HI) %>%
-    # Add age group
-    mutate(age_group=cut(age_yr, breaks=age_group_breaks, labels=age_groups))
+    # Read data
+    file_do <- files_do$filename[i]
+    data_orig <- read.csv(file.path(inputdir, file_do), as.is=T)
 
-  # Build distribution fits dataframe
-  dist_fits <- data %>%
-    select(age_group) %>%
-    unique() %>%
-    # Add other meta data
-    mutate(country=country,
-           iso3=iso3,
-           sex=sex,
-           nutrient=nutrient) %>%
-    select(country, iso3, nutrient, sex, age_group) %>%
-    # Add columns for distribution fits
-    mutate(best_dist=NA,
-           g_shape=NA,
-           g_rate=NA,
-           g_ks=NA,
-           ln_meanlog=NA,
-           ln_sdlog=NA,
-           ln_ks=NA)
+    # File meta-data
+    sex_do <- file_key$sex[i]
+    nutrient_do <- file_key$nutrient[i]
 
-  # Loop through age groups
-  fits_file <- purrr::map_df(1:nrow(dist_fits), function(j){
+    # Format data
+    data <- data_orig %>%
+      # Rename
+      rename(id=X, age_yr=age, intake=HI) %>%
+      # Add age group
+      mutate(age_group=cut(age_yr, breaks=age_group_breaks, labels=age_groups))
 
-    #
+    # Loop through age groups
+    age_groups_do <- unique(data$age_group)
+    fits_file <- purrr::map_df(1:length(age_groups_do), function(j){
 
-    # Fit distributions
-    gamma_fit <- try(fitdist(sdata$intake, distr="gamma"))
-    lognorm_fit <- try(fitdist(sdata$intake, distr="lnorm"))
+      # Subset data
+      age_group_do <- age_groups_do[j]
+      sdata <- data %>%
+        filter(age_group == age_group_do)
 
-    # Plot distributions against data
-    # denscomp(list(gamma_fit, lognorm_fit), legendtext = dist_names)
+      # Fit distributions
+      gamma_fit <- try(fitdist(sdata$intake, distr="gamma"))
+      lognorm_fit <- try(fitdist(sdata$intake, distr="lnorm"))
 
-    # Compete distributions (goodness-of-fit)
-    # gof_stats <- gofstat(list(gamma_fit, lognorm_fit), fitnames = dist_names)
+      # Plot distributions against data
+      # dist_names <- c("gamma", "log-normal")
+      # denscomp(list(gamma_fit, lognorm_fit), legendtext = dist_names)
 
-    # If gamma worked
-    if(!inherits(gamma_fit, "try-error")){
-      gof_stats <- gofstat(gamma_fit)
-      dist_fits$g_ks[i] <- gof_stats$ks
-      dist_fits$g_shape[i] <- coef(gamma_fit)["shape"]
-      dist_fits$g_rate[i] <- coef(gamma_fit)["rate"]
-    }
+      # Compete distributions (goodness-of-fit)
+      # gof_stats <- gofstat(list(gamma_fit, lognorm_fit), fitnames = dist_names)
 
-    # If log-normal worked
-    if(!inherits(lognorm_fit, "try-error")){
-      gof_stats <- gofstat(lognorm_fit)
-      dist_fits$ln_ks[i] <- gof_stats$ks
-      dist_fits$ln_meanlog[i] <- coef(lognorm_fit)["meanlog"]
-      dist_fits$ln_sdlog[i] <- coef(lognorm_fit)["sdlog"]
-    }
+      # Setup container
+      fits_age <- tibble(country=country_do,
+                         iso3=iso_do,
+                         nutrient=nutrient_do,
+                         sex=sex_do,
+                         age_group=age_group_do,
+                         best_dist=NA,
+                         g_shape=NA,
+                         g_rate=NA,
+                         g_ks=NA,
+                         ln_meanlog=NA,
+                         ln_sdlog=NA,
+                         ln_ks=NA)
 
+      # If gamma worked
+      if(!inherits(gamma_fit, "try-error")){
+        gof_stats <- gofstat(gamma_fit)
+        fits_age$g_ks <- gof_stats$ks
+        fits_age$g_shape <- coef(gamma_fit)["shape"]
+        fits_age$g_rate <- coef(gamma_fit)["rate"]
+      }
+
+      # If log-normal worked
+      if(!inherits(lognorm_fit, "try-error")){
+        gof_stats <- gofstat(lognorm_fit)
+        fits_age$ln_ks <- gof_stats$ks
+        fits_age$ln_meanlog <- coef(lognorm_fit)["meanlog"]
+        fits_age$ln_sdlog <- coef(lognorm_fit)["sdlog"]
+      }
+
+      # Return
+      fits_age
+
+
+    })
+
+    # Return
+    fits_file
 
   })
 
-  # Return
-  fits_file
+  # Mark best distribution
+  fits_out <- fits %>%
+    mutate(best_dist=ifelse(ln_ks < g_ks | is.na(g_ks), "log-normal", "gamma"))
 
+  # Export
+  outfile <- tolower(paste0(country, ".rds"))
+  saveRDS(fits_out, file.path(outdir, outfile))
+
+  # Return
+  return(fits_out)
+
+}
+
+
+# Fit distributions
+################################################################################
+
+# Asia
+bang <- fit_dists(country="Bangladesh")
+chin <- fit_dists(country="China")
+laos <- fit_dists(country="Laos")
+phil <- fit_dists(country="Philippines")
+
+braz <- fit_dists(country="Brazil")
+can <- fit_dists(country="Canada")
+mex <- fit_dists(country="Mexico")
+usa <- fit_dists(country="United States")
+
+faso <- fit_dists(country="Burkina Faso")
+eth <- fit_dists(country="Ethiopia")
+ken <- fit_dists(country="Kenya")
+uga <- fit_dists(country="Uganda")
+zam <- fit_dists(country="Zambia")
+
+faso <- fit_dists(country="Burkina Faso")
+eth <- fit_dists(country="Ethiopia")
+ken <- fit_dists(country="Kenya")
+uga <- fit_dists(country="Uganda")
+zam <- fit_dists(country="Zambia")
+
+bulg <- fit_dists(country="Bulgaria")
+esto <- fit_dists(country="Estonia")
+ital <- fit_dists(country="Italy")
+neth <- fit_dists(country="Netherlands")
+port <- fit_dists(country="Portugal")
+rom <- fit_dists(country="Romania")
+swe <- fit_dists(country="Sweden")
+bosn <- fit_dists(country="Bosnia & Herzegovina")
+
+
+# Merge distribution fits
+################################################################################
+
+# Merge data
+files2merge <- list.files(outdir)
+data <- purrr::map_df(files2merge, function(x) {
+  fdata <- readRDS(file.path(outdir, x))
 })
+
+# Format
+data_out <- data %>%
+  # Remove 100+ category
+  filter(age_group!="100-Inf") %>%
+  mutate(age_group=droplevels(age_group)) %>%
+  # Fill missing best distributions
+  mutate(best_dist=ifelse(is.na(best_dist) & !is.na(g_ks), "gamma", best_dist) %>% as.character()) %>%
+  # Convert to numeric
+  mutate(g_shape=as.numeric(g_shape),
+         g_rate=as.numeric(g_rate),
+         g_ks=as.numeric(g_ks),
+         ln_meanlog=as.numeric(ln_meanlog),
+         ln_sdlog=as.numeric(ln_sdlog),
+         ln_ks=as.numeric(ln_ks)) %>%
+  # Add nutrient info
+  left_join(nutr_key %>% select(nutrient, type2, units)) %>%
+  # Arrange
+  select(country, iso3, type2, nutrient, units, everything()) %>%
+  rename(nutrient_type=type2, nutrient_units=units)
+
+# Inspect
+str(data_out)
+freeR::complete(data_out)
+levels(data_out$age_group)
+
+# Export merged data
+saveRDS(data_out, file=file.path(datadir, "nutrient_intake_distributions_21countries.Rds"))
+
