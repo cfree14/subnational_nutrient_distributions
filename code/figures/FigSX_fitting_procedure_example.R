@@ -41,7 +41,7 @@ gamma_fit <- fitdist(data$intake, distr="gamma")
 lognorm_fit <- fitdist(data$intake, distr="lnorm")
 coef(gamma_fit )
 coef(lognorm_fit )
-gofstat(list(gamma_fit, lognorm_fit), fitnames = dist_names)
+gofstat(list(gamma_fit, lognorm_fit))
 
 # Simulate distributions
 xmax <- max(data$intake)
