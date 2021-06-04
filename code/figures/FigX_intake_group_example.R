@@ -18,6 +18,7 @@ plotdir <- "figures"
 # Read GENUS data
 data_orig <- readRDS("/Users/cfree/Dropbox/Chris/UCSB/projects/nutrition/nutrient_endowment/data/genus/processed/genus_edible_food_by_cntry_year.Rds")
 
+
 # Plot data
 ################################################################################
 

@@ -11,14 +11,13 @@ library(tidyverse)
 library(countrycode)
 
 # Directories
-inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
+inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
 datadir <- "data"
 plotdir <- "figures"
 tabledir <- "tables"
 
 # Read distribution key
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_21countries.Rds")) %>%
-  filter(country!="Bulgaria")
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_22countries.Rds"))
 
 
 # Build data

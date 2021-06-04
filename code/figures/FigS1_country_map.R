@@ -11,7 +11,7 @@ library(tidyverse)
 library(countrycode)
 
 # Directories
-inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
+inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
 datadir <- "data"
 plotdir <- "figures"
 tabledir <- "tables"
@@ -52,7 +52,7 @@ g <- ggplot() +
   # Plot/label centroids
   # geom_sf(data=centroids, size=1.2) +
   ggrepel::geom_text_repel(data=centroids, mapping=aes(x=long_dd, y=lat_dd, label=geounit),
-                           min.segment.length = 0, size=2) +
+                           min.segment.length = 0, size=2, max.overlaps = 999) +
   # Crop out Antarctica
   coord_sf(y=c(-55, NA)) +
   # Legend

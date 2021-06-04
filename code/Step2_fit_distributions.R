@@ -12,14 +12,13 @@ library(countrycode)
 library(fitdistrplus)
 
 # Directories
-inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
+inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
 datadir <- "data"
 outdir <- "data/temp"
 plotdir <- "figures"
 
 # Read file key
-file_key <- read.csv(file.path(datadir, "SPADE_file_key.csv"), as.is=T) %>%
-  filter(filename %in% list.files(inputdir)) # Simone is editting?
+file_key <- read.csv(file.path(datadir, "SPADE_file_key.csv"), as.is=T)
 
 # Read nutrient key
 nutr_key <- readxl::read_excel(file.path(datadir, "SPADE_nutrient_key.xlsx"))
@@ -145,6 +144,8 @@ fit_dists <- function(country){
 # Fit distributions
 ################################################################################
 
+sort(unique(file_key$country))
+
 # Asia
 bang <- fit_dists(country="Bangladesh")
 chin <- fit_dists(country="China")
@@ -169,6 +170,7 @@ neth <- fit_dists(country="Netherlands")
 port <- fit_dists(country="Portugal")
 rom <- fit_dists(country="Romania")
 swe <- fit_dists(country="Sweden")
+belg <- fit_dists(country="Belgium")
 bosn <- fit_dists(country="Bosnia & Herzegovina")
 
 
@@ -177,6 +179,7 @@ bosn <- fit_dists(country="Bosnia & Herzegovina")
 
 # Merge data
 files2merge <- list.files(outdir)
+ncountries <- length(files2merge)
 data <- purrr::map_df(files2merge, function(x) {
   fdata <- readRDS(file.path(outdir, x))
 })
@@ -196,9 +199,9 @@ data_out <- data %>%
          ln_sdlog=as.numeric(ln_sdlog),
          ln_ks=as.numeric(ln_ks)) %>%
   # Add nutrient info
-  left_join(nutr_key %>% select(nutrient, type2, units)) %>%
+  left_join(nutr_key %>% dplyr::select(nutrient, type2, units)) %>%
   # Arrange
-  select(country, iso3, type2, nutrient, units, everything()) %>%
+  dplyr::select(country, iso3, type2, nutrient, units, everything()) %>%
   rename(nutrient_type=type2, nutrient_units=units)
 
 # Inspect
@@ -207,5 +210,6 @@ freeR::complete(data_out)
 levels(data_out$age_group)
 
 # Export merged data
-saveRDS(data_out, file=file.path(datadir, "nutrient_intake_distributions_21countries.Rds"))
+outfile <- paste0("nutrient_intake_distributions_", ncountries, "countries.Rds")
+saveRDS(data_out, file=file.path(datadir, outfile))
 

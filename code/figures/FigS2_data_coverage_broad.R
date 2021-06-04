@@ -11,7 +11,7 @@ library(tidyverse)
 library(countrycode)
 
 # Directories
-inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
+inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
 datadir <- "data"
 plotdir <- "figures"
 tabledir <- "tables"
@@ -37,7 +37,6 @@ stats <- data %>%
                             "Children-Females-Males"="Both males and females")) %>%
   mutate(type2=recode(type2,
                       "Other macronutrient"="Other\nmacronutrient"))
-
 
 
 # Plot data

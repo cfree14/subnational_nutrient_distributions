@@ -11,7 +11,7 @@ library(tidyverse)
 library(countrycode)
 
 # Directories
-inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
+inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
 datadir <- "data"
 plotdir <- "figures"
 
@@ -126,6 +126,7 @@ table(file_key$sex)
 sort(unique(file_key$nutrient))
 
 # Only 1 file per country, sex, nutrient?
+# must report zero rows
 check1 <- file_key %>%
   group_by(country, iso3, sex, nutrient) %>%
   summarize(n=n(),
