@@ -53,7 +53,13 @@ ears <- dris %>%
   mutate(ear_units=gsub("/d", "", ear_units),
          ear_units=recode(ear_units, "µg"="mcg")) %>%
   # Remove protein EARs which are in different units
-  filter(nutrient!="Protein")
+  filter(nutrient!="Protein") %>%
+  # Convert EAR units to intake units
+  # Convert copper/iodine/selenium from mcg to mg
+  mutate(ear=ifelse(nutrient %in% c("Copper", "Iodine", "Selenium"), measurements::conv_unit(ear, "ug", "mg"), ear),
+         ear_lact=ifelse(nutrient %in% c("Copper", "Iodine", "Selenium"), measurements::conv_unit(ear_lact, "ug", "mg"), ear_lact),
+         ear_preg=ifelse(nutrient %in% c("Copper", "Iodine", "Selenium"), measurements::conv_unit(ear_preg, "ug", "mg"), ear_preg),
+         ear_units=ifelse(nutrient %in% c("Copper", "Iodine", "Selenium"), "mg", ear_units))
 
 # Inspect
 ear_nutr <- sort(unique(ears$nutrient))
@@ -110,15 +116,28 @@ data <- data_orig %>%
                               "95-99"=">70 yr"),
          sex_ear=ifelse(age_group_ear %in% c("1-3 yr", "4-8 yr"), "Both", sex)) %>%
   left_join(ears, by=c("nutrient"="nutrient", "age_group_ear"="age_group", "sex_ear"="sex")) %>%
+  # Set EAR CV
+  mutate(ear_cv=ifelse(nutrient=="Vitamin B12", 0.25, 0.1),
+         ear_cv=ifelse(is.na(ear), NA, ear_cv)) %>%
+  # Calculate SEV
+  mutate(g_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], shape=g_shape[i], rate=g_rate[i], plot=F)),
+         ln_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], meanlog=ln_meanlog[i], sdlog=ln_sdlog[i], plot=F))) %>%
+  mutate(sev=ifelse(best_dist=="gamma", g_sev, ln_sev)) %>%
   # Arrange
   dplyr::select(country:age_group,
                 sex_ear, age_group_ear,
-                ear_units, ear, ear_lact, ear_preg,
+                ear_units, ear_cv, ear, ear_lact, ear_preg, g_sev, ln_sev,
                 g_shape:g_ks, g_mu:g_kurt, ln_meanlog:ln_ks, ln_mu:ln_kurt, best_dist, everything())
 
 # Inspect
 freeR::complete(data)
 sum(data$nutrient_units!=data$ear_units, na.rm=T)
+
+# Confirm that EAR units are intake units
+data %>%
+  dplyr::select(nutrient, nutrient_units, ear_units) %>%
+  unique() %>%
+  filter(nutrient_units!=ear_units)
 
 
 # Export data
@@ -130,58 +149,41 @@ write.csv(data, file=file.path(datadir, "nutrient_intake_distributions_22countri
 
 
 
-# Plot data
+# Quick and dirty plots
 ################################################################################
 
-plot(ln_cv ~ g_cv, data, ylim=c(0,3), xlim=c(0,3))
-abline(a=0, b=1)
-
-g <- ggplot(data, aes(x=pmin(g_cv,3), y=pmin(ln_cv,6), col=best_dist)) +
-  geom_point()
+# Is skewness related to health?
+g <- ggplot(data, aes(x=pmin(mu/ear, 10), y=sev)) +
+  geom_point() +
+  labs(x="Skewness", y="SEV") +
+  theme_bw()
 g
 
-# Skewness by nutrient
-g <- ggplot(data, aes(y=nutrient, x=pmin(skew, 5))) +
-  facet_grid(nutrient_type~., scales="free_y", space="free_y") +
-  geom_boxplot() +
+g <- ggplot(data, aes(x=pmin(mu/ear, 5), y=pmin(skew, 5), fill=sev)) +
+  geom_point(pch=21) +
+  # Reference line
+  geom_vline(xintercept=1) +
   # Labels
-  labs(x="Skewness", y="") +
+  labs(x="Mean / EAR", y="Skewness") +
+  # Legend
+  # scale_fill_gradientn(name="SEV (% deficient)", colors=RColorBrewer::brewer.pal(9, "YlOrRd")) +
+  scale_fill_gradient2(name="SEV (% deficient)", midpoint = 50, low="navy", high="darkred", mid="white") +
+  guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
   theme_bw()
 g
 
-# Kurtosis by nutrient
-g <- ggplot(data, aes(y=nutrient, x=pmin(kurt, 70))) +
-  facet_grid(nutrient_type~., scales="free_y", space="free_y") +
-  geom_boxplot() +
+g <- ggplot(data, aes(x=pmin(mu/ear, 5), y=sev, fill=pmin(skew,3))) +
+  geom_point(pch=21) +
+  # Reference line
+  geom_vline(xintercept=1) +
   # Labels
-  labs(x="Kurtosis", y="") +
+  labs(x="Mean intake / EAR", y="SEV\n(% deficient)") +
+  # Legend
+  scale_fill_gradientn(name="Skewness", colors=RColorBrewer::brewer.pal(9, "YlOrRd")) +
+  guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
   theme_bw()
 g
-
-# Skewness ~ kurtosis
-g <- ggplot(data, aes(x=pmin(skew, 5), y=pmin(kurt, 70), color=best_dist)) +
-  geom_point()
-g
-
-
-
-# By age?
-data_vit <- data %>% filter(nutrient_type=="Vitamin" & sex!="Children") %>%
-  mutate(group=paste(country, nutrient, sex, sep="-"))
-g <- ggplot(data_vit, aes(x=age_group, y=pmin(skew, 5), color=country, linetype=sex, group=group)) +
-  facet_wrap(~nutrient) +
-  geom_line() +
-  theme_bw()
-g
-
-
-g <- ggplot(data_vit, aes(y=country, x=pmin(skew, 5)))  +
-  facet_wrap(~nutrient) +
-  geom_boxplot() +
-  theme_bw()
-g
-
 
 
