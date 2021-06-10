@@ -117,7 +117,7 @@ for(i in 1:length(nutrients)){
   # Plot data
   xlabel <- paste0("Habitual intake (", nutrient_units, "/d)")
   g <- ggplot(sdata, aes(x=intake, y=density, color=age_group_lo, linetype=sex, group=group)) +
-    facet_wrap(~country, scales="free", ncol=5) +
+    facet_wrap(~country, scales="free_y", ncol=5) +
     geom_line() +
     # Labels
     labs(x=xlabel, y="Density", title=nutrient_do) +
