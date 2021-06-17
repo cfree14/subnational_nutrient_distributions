@@ -13,14 +13,14 @@ The repository is organized using the following structure:
 - figures.......... folder containing figures for the manuscript
 - tables........... folder containing tables for the manuscript
 
-Please email Simone Passarelli (spassarelli@g.harvard.edu) if you have any questions about the paper and Chris Free (cfree14@gmail.com) if you have any questions about the data, code, and repository.
+Please email Simone Passarelli (spassarelli@g.harvard.edu) if you have any questions about the paper and Chris Free (cfree14@gmail.com) if you have any questions about using the data, code, and/or repository.
 
 
 ## The "nutriR" R package
 
-This paper and repository leverages functions for analyzing and using habitual intake distributions provided in the "nutriR" R package available here: https://github.com/cfree14/nutriR
+This paper and repository leverages functions for analyzing and using habitual intake distributions provided in the "nutriR" R package, which is available on GitHub here: https://github.com/cfree14/nutriR
 
-The package includes the following functions:
+The package includes functions to:
 
 - Extract subnational intake distributions of interest: `?get_dists`
 - Plot subnational intake distributions of interest: `?plot_dists`
