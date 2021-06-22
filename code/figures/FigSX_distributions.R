@@ -13,7 +13,8 @@ library(countrycode)
 # Directories
 inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
 datadir <- "data"
-plotdir <- "figures/dists"
+plotdir1 <- "figures/dists_free"
+plotdir2 <- "figures/dists_fixed"
 tabledir <- "tables"
 
 # Read distribution key
@@ -114,9 +115,37 @@ for(i in 1:length(nutrients)){
   sdata <- data %>%
     filter(nutrient==nutrient_do)
 
-  # Plot data
+  # Plot data (axes free)
   xlabel <- paste0("Habitual intake (", nutrient_units, "/d)")
-  g <- ggplot(sdata, aes(x=intake, y=density, color=age_group_lo, linetype=sex, group=group)) +
+  g1 <- ggplot(sdata, aes(x=intake, y=density, color=age_group_lo, linetype=sex, group=group)) +
+    facet_wrap(~country, scales="free", ncol=5) +
+    geom_line() +
+    # Labels
+    labs(x=xlabel, y="Density", title=nutrient_do) +
+    # Scale
+    scale_linetype_discrete(name="Sex") +
+    scale_color_gradientn(name="Age group (yr)", colors=RColorBrewer::brewer.pal(9, "YlOrRd")[2:9]) +
+    guides(color = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
+    # Theme
+    theme_bw() +
+    theme(axis.text.y = element_blank(),
+          axis.text=element_text(size=6),
+          axis.title=element_text(size=8),
+          legend.text=element_text(size=6),
+          legend.title=element_text(size=8),
+          strip.text=element_text(size=8),
+          plot.title=element_text(size=10),
+          # Gridlines
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(),
+          axis.line = element_line(colour = "black"),
+          legend.position="bottom")
+  g1
+
+  # Plot data (axes fixed)
+  xlabel <- paste0("Habitual intake (", nutrient_units, "/d)")
+  g2 <- ggplot(sdata, aes(x=intake, y=density, color=age_group_lo, linetype=sex, group=group)) +
     facet_wrap(~country, scales="free_y", ncol=5) +
     geom_line() +
     # Labels
@@ -140,7 +169,7 @@ for(i in 1:length(nutrients)){
           panel.background = element_blank(),
           axis.line = element_line(colour = "black"),
           legend.position="bottom")
-  g
+  g2
 
   # Number of countries and dimension
   ncntry <- n_distinct(sdata$country)
@@ -149,9 +178,10 @@ for(i in 1:length(nutrients)){
 
   # Export
   outfile <- paste0("FigSX_intake_dist_", tolower(nutrient_do) %>% gsub(" ", "_", .), ".png")
-  ggsave(g, filename=file.path(plotdir, outfile),
+  ggsave(g1, filename=file.path(plotdir1, outfile),
          width=6.5, height=height, units="in", dpi=600)
-
+  ggsave(g2, filename=file.path(plotdir2, outfile),
+         width=6.5, height=height, units="in", dpi=600)
 
 }
 

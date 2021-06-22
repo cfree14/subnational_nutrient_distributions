@@ -34,6 +34,7 @@ base_theme <-  theme(axis.text=element_text(size=5),
                      panel.background = element_blank(),
                      axis.line = element_line(colour = "black"))
 
+
 # C.V. of nutrient intakes
 ################################################################################
 

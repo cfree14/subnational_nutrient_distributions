@@ -126,8 +126,8 @@ data <- data_orig %>%
   # Arrange
   dplyr::select(country:age_group,
                 sex_ear, age_group_ear,
-                ear_units, ear_cv, ear, ear_lact, ear_preg, g_sev, ln_sev,
-                g_shape:g_ks, g_mu:g_kurt, ln_meanlog:ln_ks, ln_mu:ln_kurt, best_dist, everything())
+                ear_units, ear_cv, ear, ear_lact, ear_preg,
+                g_shape:g_ks, g_mu:g_kurt, g_sev, ln_meanlog:ln_ks, ln_mu:ln_kurt, ln_sev, best_dist, everything())
 
 # Inspect
 freeR::complete(data)
