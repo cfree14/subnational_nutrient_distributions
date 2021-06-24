@@ -17,7 +17,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data <- readRDS(file=file.path(datadir, "percent_overlap_among_sex_pairs.Rds"))
+data <- readRDS(file=file.path(datadir, "percent_overlap_among_age_pairs.Rds"))
 
 
 # Build data
@@ -26,9 +26,13 @@ data <- readRDS(file=file.path(datadir, "percent_overlap_among_sex_pairs.Rds"))
 # Compute stats
 stats <- data %>%
   # Calculate median percent overlap
-  group_by(nutrient_type, nutrient, age_group) %>%
+  group_by(nutrient_type, nutrient, country, iso3, sex) %>%
   summarise(poverlap=median(poverlap, na.rm=T)) %>%
-  ungroup()
+  ungroup() %>%
+  # Format sex
+  mutate(sex=recode_factor(sex,
+                           "Women"="Females",
+                           "Men"="Males"))
 
 
 # Plot data
@@ -51,8 +55,8 @@ my_theme <-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
                    legend.position="bottom")
 
 # Plot data
-g <- ggplot(stats, aes(y=nutrient, x=age_group, fill=poverlap)) +
-  facet_grid(nutrient_type~., space="free_y", scales="free_y") +
+g <- ggplot(stats, aes(y=nutrient, x=iso3, fill=poverlap)) +
+  facet_grid(nutrient_type~sex, space="free_y", scales="free_y") +
   geom_raster() +
   # Labels
   labs(x="", y="") +
@@ -64,7 +68,7 @@ g <- ggplot(stats, aes(y=nutrient, x=age_group, fill=poverlap)) +
 g
 
 # Export plot
-ggsave(g, filename=file.path(plotdir, "FigX_similarity_across_sexes.png"),
+ggsave(g, filename=file.path(plotdir, "Fig3_similarity_across_ages.png"),
        width=6.5, height=5, units="in", dpi=600)
 
 

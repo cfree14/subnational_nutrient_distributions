@@ -17,7 +17,11 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data <- readRDS(file=file.path(datadir, "percent_overlap_among_age_pairs.Rds"))
+data <- readRDS(file=file.path(datadir, "percent_overlap_among_country_pairs.Rds")) %>%
+  # Recode se
+  mutate(sex=recode(sex, "Males"="Men", "Females"="Women")) %>%
+  # Remove Phillipines
+  filter(iso1!="PHL" | iso2=="PHL")
 
 
 # Build data
@@ -26,13 +30,9 @@ data <- readRDS(file=file.path(datadir, "percent_overlap_among_age_pairs.Rds"))
 # Compute stats
 stats <- data %>%
   # Calculate median percent overlap
-  group_by(nutrient_type, nutrient, country, iso3, sex) %>%
+  group_by(nutrient_type, nutrient, sex, age) %>%
   summarise(poverlap=median(poverlap, na.rm=T)) %>%
-  ungroup() %>%
-  # Format sex
-  mutate(sex=recode_factor(sex,
-                           "Women"="Females",
-                           "Men"="Males"))
+  ungroup()
 
 
 # Plot data
@@ -55,20 +55,21 @@ my_theme <-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
                    legend.position="bottom")
 
 # Plot data
-g <- ggplot(stats, aes(y=nutrient, x=iso3, fill=poverlap)) +
+g <- ggplot(stats, aes(y=nutrient, x=age, fill=poverlap)) +
   facet_grid(nutrient_type~sex, space="free_y", scales="free_y") +
   geom_raster() +
   # Labels
   labs(x="", y="") +
   # Legend
-  scale_fill_gradientn(name="Median\npercent overlap", colors=rev(RColorBrewer::brewer.pal(9, "YlOrRd"))) +
+  scale_fill_gradientn(name="Median\npercent overlap", lim=c(0,100),
+                       colors=rev(RColorBrewer::brewer.pal(9, "YlOrRd"))) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
   theme_bw() + my_theme
 g
 
 # Export plot
-ggsave(g, filename=file.path(plotdir, "FigX_similarity_across_ages.png"),
+ggsave(g, filename=file.path(plotdir, "Fig1_similarity_across_countries.png"),
        width=6.5, height=5, units="in", dpi=600)
 
 
