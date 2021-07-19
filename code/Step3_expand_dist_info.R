@@ -123,6 +123,10 @@ data <- data_orig %>%
   mutate(g_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], shape=g_shape[i], rate=g_rate[i], plot=F)),
          ln_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], meanlog=ln_meanlog[i], sdlog=ln_sdlog[i], plot=F))) %>%
   mutate(sev=ifelse(best_dist=="gamma", g_sev, ln_sev)) %>%
+  # Calculate SEV using cutpoint method
+  rowwise() %>%
+  mutate(cutpoint_sev=nutriR::cutpoint(ear = ear, intake_avg = mu, intake_cv = cv)) %>%
+  ungroup() %>%
   # Arrange
   dplyr::select(country:age_group,
                 sex_ear, age_group_ear,
@@ -187,3 +191,12 @@ g <- ggplot(data, aes(x=pmin(mu/ear, 5), y=sev, fill=pmin(skew,3))) +
 g
 
 
+# Are SEVs calculated using cutpoint and probability methods related?
+g <- ggplot(data, aes(x=cutpoint_sev*100, y=sev, color=skew)) +
+  geom_point() +
+  # Labels
+  labs(x="% inaqequate intake\nestimated using the cutpoint method",
+       y="% inadequate intake\nestimated using the probability method") +
+  # Theme
+  theme_bw()
+g
