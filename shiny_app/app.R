@@ -15,18 +15,39 @@ library(RColorBrewer)
 # Directories
 datadir <- "data" # for actual app
 codedir <- "code"  # for actual app
-# datadir <- "shiny/data" # when testing
-# codedir <- "shiny/code" # when testing
+# datadir <- "shiny_app/data" # when testing
+# codedir <- "shiny_app/code" # when testing
 
 # Source code
 sapply(list.files(codedir), function(x) source(file.path(codedir, x)))
 
-# Read data
+# Read DRIS
 dris <-nutriR::dris
+
+# Read distributions
 dists_full <- nutriR::dists_full %>%
-  filter(sex!="Children")
+  # Remove children
+  filter(sex!="Children") %>%
+  # Remove problem countries
+  filter(!country %in% c("Philippines")) %>% # "Burkina Faso"
+  # Recode countries for plotting
+  mutate(country_label=recode(country,
+                              "Bosnia & Herzegovina"="Bosnia &\nHerzegovina"))
 
+# Read overlaps
+overlaps_orig <- readRDS(file.path(datadir, "percent_overlap_among_country_pairs.Rds"))
 
+# Format overlaps
+overlaps <- overlaps_orig %>%
+  # Remove Philippines
+  filter(iso1!="PHL" & iso2!="PHL") %>%
+  # Calculate average
+  group_by(nutrient, sex, age) %>%
+  summarize(overlap=mean(poverlap)) %>%
+  ungroup() %>%
+  # Format
+  rename(age_group=age) %>%
+  mutate(age_group=factor(age_group, levels=levels(dists_full$age_group)))
 
 # Parameters
 ################################################################################
@@ -35,13 +56,13 @@ dists_full <- nutriR::dists_full %>%
 nutrients <- sort(unique(dists_full$nutrient))
 
 # Base theme
-base_theme <- theme(axis.text=element_text(size=14),
-                    axis.title=element_text(size=16),
-                    legend.text=element_text(size=14),
-                    legend.title=element_text(size=16),
-                    strip.text=element_text(size=16),
-                    plot.subtitle=element_text(size=18),
-                    plot.title=element_text(size=16),
+base_theme <- theme(axis.text=element_text(size=12),
+                    axis.title=element_text(size=14),
+                    legend.text=element_text(size=12),
+                    legend.title=element_text(size=14),
+                    strip.text=element_text(size=14),
+                    plot.subtitle=element_text(size=12),
+                    plot.title=element_text(size=14),
                     panel.grid.major = element_blank(),
                     panel.grid.minor = element_blank(),
                     panel.background = element_blank(),
@@ -69,7 +90,12 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
 
      # Illustrate distributions
      h3("Subnational habitual intake distributions"),
-     plotOutput(outputId = "plot_intake_dists", width=600, height=2000),
+     plotOutput(outputId = "plot_intake_dists", width=600, height=1000),
+     br(),
+
+     # Illustrate distributions - difference among countries
+     h3("Subnational habitual intake distributions - diff age groups"),
+     plotOutput(outputId = "plot_intake_dists_age_group", width=1000, height=1200),
      br(),
 
      # Illustrate means
@@ -79,7 +105,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
 
      # Illustrate prevalence of inadequate intakes
      h3("Prevalence of inadequate intakes"),
-     plotOutput(outputId = "plot_inadequate_intakes", width=1000, height=600),
+     plotOutput(outputId = "plot_inadequate_intakes", width=600, height=375),
      br()
 
   ),
@@ -105,11 +131,19 @@ server <- function(input, output){
     g
   })
 
-  # Plot intake means
+  # Plot intake distributions
   output$plot_intake_dists <- renderPlot({
     g <- plot_intake_dists(data = dists_full,
                            nutrient = input$nutrient,
                            base_theme = base_theme)
+    g
+  })
+
+  # Plot intake distributions
+  output$plot_intake_dists_age_group <- renderPlot({
+    g <- plot_intake_dists_age_group(data = dists_full,
+                                     nutrient = input$nutrient,
+                                     base_theme = base_theme)
     g
   })
 
@@ -128,7 +162,6 @@ server <- function(input, output){
                                  base_theme = base_theme)
     g
   })
-
 
 
 }

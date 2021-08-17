@@ -18,12 +18,23 @@ plot_intake_means <- function(data, nutrient, base_theme){
     # Ensure that all countries are plotted
     mutate(country=factor(country, levels=countries))
 
+  # Nutrient units
+  nutrient_units <- sdata$nutrient_units %>% unique()
+
+  # Ears
+  ears <- sdata %>%
+    select(sex, age_group,  ear) %>%
+    unique()
+
   # Plot data
+  y_label <- paste0("Mean intake (", nutrient_units, ")")
   g <- ggplot(sdata, aes(x=age_group, y=mu, fill=sev)) +
-    facet_grid(country~sex, scales="free_y") +
-    geom_bar(stat="identity", color="grey30", stroke=0.5) +
+    facet_grid(country~sex, drop = F) +
+    geom_bar(stat="identity", color="black", lwd=0.2) +
+    # Plot EARs
+    geom_line(data=ears, mapping=aes(x=age_group, y=ear, group=sex), inherit.aes=F) +
     # Labels
-    labs(x="Age group", y="Mean intake") +
+    labs(x="Age group", y=y_label) +
     # Scales
     scale_x_discrete(drop=F) +
     # Legend

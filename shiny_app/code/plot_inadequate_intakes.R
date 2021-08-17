@@ -20,7 +20,7 @@ plot_inadequate_intakes <- function(data, nutrient, base_theme){
 
   # Plot data
   g <- ggplot(sdata, aes(x=age_group, y=country, fill=sev)) +
-    facet_wrap(~sex) +
+    facet_wrap(~sex, drop = F) +
     geom_tile() +
     # Labels
     labs(x="Age group", y="") +
