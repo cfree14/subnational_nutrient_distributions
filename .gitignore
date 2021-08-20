@@ -5,6 +5,8 @@
 
 # Ignore folders
 drafts
+shiny_app/data/
 
 # Ignore large files
 data/nhanes_spade_output.Rds
+data/SPADE_output_merged_but_downscaled.Rds

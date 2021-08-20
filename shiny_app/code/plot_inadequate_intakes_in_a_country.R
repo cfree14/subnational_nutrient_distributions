@@ -1,33 +1,33 @@
 
 # Plot inadequate intakes
-# data <- dists_full; nutrient <- "Calcium"
-plot_inadequate_intakes <- function(data, nutrient, base_theme){
+# data <- dists_full; country <- "United States"
+plot_inadequate_intakes_in_a_country <- function(data, country, base_theme){
 
-  # Nutrient
-  nutrient_do <- nutrient
+  # County
+  country_do <- country
 
   # Parameters
   sexes <- data$sex %>% unique()
   age_groups <- data$age_group %>% unique()
-  countries <- data$country %>% unique()
+  nutrients <- data$nutrient %>% unique()
 
   # Subset data
   sdata <- data %>%
-    # Reduce to nutrient of interest
-    filter(nutrient==nutrient_do) %>%
-    # Ensure that all countries are plotted
-    mutate(country=factor(country, levels=countries))
+    # Reduce to country of interest
+    filter(country==country_do) %>%
+    # Ensure that all nutrients are plotted
+    mutate(nutrient=factor(nutrient, levels=nutrients))
 
   # Plot data
-  g <- ggplot(sdata, aes(x=age_group, y=country, fill=sev)) +
+  g <- ggplot(sdata, aes(x=age_group, y=nutrient, fill=sev)) +
     facet_wrap(~sex, drop = F) +
     geom_tile() +
     # Labels
-    labs(x="Age group", y="", title=paste("Prevalence of inadequate intakes for:", nutrient_do)) +
+    labs(x="Age group", y="", title=paste("Prevalence of inadequate intakes in:", country_do)) +
     # Legend
     scale_fill_gradientn("Prevalence of\ninadequate intakes",
                          lim=c(0,100),
-                         colors=RColorBrewer::brewer.pal(9, "YlOrRd")) +
+                         colors=RColorBrewer::brewer.pal(9, "YlOrRd"), na.value="white") +
     guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
     # Scales
     scale_x_discrete(drop=F) +

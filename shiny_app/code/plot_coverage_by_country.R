@@ -1,22 +1,22 @@
 
 # Plot coverage
-# data <- dists_full; nutrient <- "Calcium"
-plot_coverage <- function(data, nutrient, base_theme){
+# data <- dists_full; country <- "United States"
+plot_coverage_by_country <- function(data, country, base_theme){
 
-  # Nutrient
-  nutrient_do <- nutrient
+  # Country
+  country_do <- country
 
   # Parameters
   sexes <- data$sex %>% unique()
   age_groups <- data$age_group %>% unique()
-  countries <- data$country %>% unique()
+  nutrients <- data$nutrient %>% unique() %>% sort()
 
   # Subset data
   sdata <- data %>%
-    # Reduce to nutrient of interest
-    filter(nutrient==nutrient_do) %>%
+    # Reduce to country of interest
+    filter(country==country_do) %>%
     # Summarize availability by sex
-    group_by(country, age_group) %>%
+    group_by(nutrient_type, nutrient, age_group) %>%
     summarise(sexes=paste(sort(unique(sex)), collapse="-")) %>%
     ungroup() %>%
     # Recode sexes
@@ -24,15 +24,16 @@ plot_coverage <- function(data, nutrient, base_theme){
                                "Males"="Men only",
                                "Females"="Women only",
                                "Females-Males"="Both men/women")) %>%
-    # Ensure that all countries are plotted
-    mutate(country=factor(country, levels=countries))
+    # Ensure that all nutrients are plotted
+    mutate(nutrient=factor(nutrient, levels=nutrients))
 
   # Plot data
-  g <- ggplot(sdata, aes(x=age_group, y=country, fill=sexes)) +
+  g <- ggplot(sdata, aes(x=age_group, y=nutrient, fill=sexes)) +
+    # facet_grid(nutrient_type~., space="free_y", scales="free_y", drop=T) +
     geom_tile() +
     # Labels
-    labs(x="Age group", y="", title=paste("Data coverage for:", nutrient_do)) +
-    scale_fill_discrete(name="") +
+    labs(x="Age group", y="", title=paste("Data coverage for:", country_do)) +
+    scale_fill_discrete(name="", drop=F) +
     # Scales
     scale_x_discrete(drop=F) +
     scale_y_discrete(drop=F) +

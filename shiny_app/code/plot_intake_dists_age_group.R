@@ -1,7 +1,7 @@
 
 # Plot coverage
 # data <- dists_full; nutrient <- "Calcium"
-plot_intake_dists_age_group <- function(data, nutrient, base_theme){
+plot_intake_dists_age_group <- function(data, nutrient, overlaps, base_theme){
 
   # Nutrient
   nutrient_do <- nutrient
@@ -50,7 +50,7 @@ plot_intake_dists_age_group <- function(data, nutrient, base_theme){
               mapping=aes(x=intake_max, y=density_max, label=overlap_label),
               inherit.aes=F, size=4, hjust=1.1, vjust=1.1) +
     # Labels
-    labs(x=x_label, y="Density", title="Males") +
+    labs(x=x_label, y="Density", title="Males", subtitle = paste("Habitual intake distribution for:", nutrient_do)) +
     # Legend
     scale_color_discrete(name="Country", drop=F) +
     # Theme
@@ -68,7 +68,7 @@ plot_intake_dists_age_group <- function(data, nutrient, base_theme){
               mapping=aes(x=intake_max, y=density_max, label=overlap_label),
               inherit.aes=F, size=4, hjust=1.1, vjust=1.1) +
     # Labels
-    labs(x=x_label, y="Density", title="Females") +
+    labs(x=x_label, y="Density", title="Females", subtitle = paste("Habitual intake distribution for:", nutrient_do)) +
     # Legend
     scale_color_discrete(name="Country", drop=F) +
     # Theme

@@ -34,7 +34,7 @@ plot_intake_means <- function(data, nutrient, base_theme){
     # Plot EARs
     geom_line(data=ears, mapping=aes(x=age_group, y=ear, group=sex), inherit.aes=F) +
     # Labels
-    labs(x="Age group", y=y_label) +
+    labs(x="Age group", y=y_label, title=paste("Mean habitual intakes and EARs for:", nutrient_do)) +
     # Scales
     scale_x_discrete(drop=F) +
     # Legend
@@ -44,7 +44,7 @@ plot_intake_means <- function(data, nutrient, base_theme){
     guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
     # Theme
     theme_bw() + base_theme +
-    theme(legend.position="top",
+    theme(legend.position="bottom",
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   g
 

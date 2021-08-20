@@ -30,13 +30,13 @@ plot_intake_dists <- function(data, nutrient, base_theme){
     facet_wrap(~country, scales="free", drop = F, ncol=4) +
     geom_line() +
     # Labels
-    labs(x=x_label, y="Density") +
+    labs(x=x_label, y="Density", paste("Habitual intake distributions for:", nutrient_do)) +
     # Legend
     scale_color_ordinal(name="Age group") +
     scale_linetype(name="Sex") +
     # Theme
     theme_bw() + base_theme +
-    theme(legend.position="top",
+    theme(legend.position="right",
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   g
 
