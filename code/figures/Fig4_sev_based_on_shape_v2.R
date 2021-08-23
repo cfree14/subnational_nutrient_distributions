@@ -66,7 +66,11 @@ base_theme <-  theme(axis.text=element_text(size=5),
                      panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(),
                      panel.background = element_blank(),
-                     axis.line = element_line(colour = "black"))
+                     axis.line = element_line(colour = "black"),
+                     # Legend
+                     legend.position = "bottom",
+                     legend.key.size = unit(0.4, "cm"),
+                     legend.background = element_rect(fill=alpha('blue', 0)))
 
 # SEV based on variability
 g1 <- ggplot(data, aes(x=pmin(mu/ear, 5), y=sev, fill=pmin(cv,1))) +
@@ -83,19 +87,17 @@ g1 <- ggplot(data, aes(x=pmin(mu/ear, 5), y=sev, fill=pmin(cv,1))) +
   scale_fill_gradientn(name="Coefficient\nof variation",
                        colors=RColorBrewer::brewer.pal(9, "YlOrRd"),
                        breaks=seq(0,1, 0.25),
-                       labels=c(seq(0, 0.75, 0.25), "≥1.0")) +
+                       labels=c(seq(0, 0.75, 0.25), "≥1.0"),
+                       lim=c(0,1)) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Axes
   scale_x_continuous(breaks=0:5, labels=c(0:4, "≥5")) +
   # Theme
-  theme_bw() + base_theme +
-  theme(legend.position = c(0.85,0.8),
-        legend.key.size = unit(0.3, "cm"),
-        legend.background = element_rect(fill=alpha('blue', 0)))
+  theme_bw() + base_theme
 g1
 
 # SEV probability method compared to cutpoint method
-g2 <- ggplot(data, aes(y=cutpoint_sev, x=sev, fill=pmin(cv,1))) +
+g2 <- ggplot(data, aes(y=cutpoint_sev, x=sev, fill=pmin(skew,3))) +
   geom_point(pch=21, size=1, stroke=0.1) +
   # Horizontal line
   geom_abline(slope=1) +
@@ -107,21 +109,21 @@ g2 <- ggplot(data, aes(y=cutpoint_sev, x=sev, fill=pmin(cv,1))) +
        x="% inadequate intake (SEV)\nestimated using the probability method",
        tag="B") +
   # Legend
-  scale_fill_gradientn(name="Coefficient\nof variation",
+  scale_fill_gradientn(name="Skewness\n ",
                        colors=RColorBrewer::brewer.pal(9, "YlOrRd"),
-                       breaks=seq(0,1, 0.25),
-                       labels=c(seq(0,0.75, 0.25), "≥1.0")) +
+                       breaks=seq(0, 3, 1),
+                       labels=c(seq(0,2,1), "≥3"),
+                       lim=c(0,3)) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
-  theme_bw() + base_theme +
-  theme(legend.position = "none")
+  theme_bw() + base_theme
 g2
 
 # Merge
 g <- gridExtra::grid.arrange(g1, g2, nrow=1)
-
+g
 
 # Export
-ggsave(g, filename=file.path(plotdir, "Fig4_sev_based_on shape.png"),
-       width=6.5, height=3, units="in", dpi=600)
+ggsave(g, filename=file.path(plotdir, "Fig4_sev_based_on shape_v2.png"),
+       width=6.5, height=3.5, units="in", dpi=600)
 

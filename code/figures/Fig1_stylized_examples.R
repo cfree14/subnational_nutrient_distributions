@@ -70,13 +70,13 @@ nutriR::mean_dist(shape=gamma_alpha, rate=gamma_beta) # check mean is right
 
 # Merge data
 df1 <- bind_rows(norm_df, lnorm_base_df, gamma_df) %>%
-  mutate(dist=factor(dist, levels=c(norm_label, lnorm_base_label, gamma_label)))
+  mutate(dist=factor(dist, levels=c(norm_label, gamma_label, lnorm_base_label)))
 
 # Second plot dataset
 ########################################
 
 # Base
-lnorm_cv_base_label <- gsub("Log-normal", "Base variability", lnorm_base_label)
+lnorm_cv_base_label <- gsub("Log-normal", "Medium variability", lnorm_base_label)
 lnorm_cv_base_df <- lnorm_base_df %>%
   mutate(dist=lnorm_cv_base_label)
 
@@ -86,7 +86,7 @@ meanlog_cv_lo <- log(mu) - sdlog_cv_lo^2/2
 lnorm_cv_lo_y <- dlnorm(x=x, meanlog=meanlog_cv_lo, sdlog=sdlog_cv_lo)
 # plot(lnorm_y~x)
 lnorm_cv_lo_sev <- nutriR::sev(ear=ear, cv=ear_cv, meanlog=meanlog_cv_lo, sdlog=sdlog_cv_lo) %>% round(., 0)
-lnorm_cv_lo_label <- paste0("Lower variability (", lnorm_cv_lo_sev, "%)")
+lnorm_cv_lo_label <- paste0("Low variability (", lnorm_cv_lo_sev, "%)")
 lnorm_cv_lo_df <- tibble(dist=lnorm_cv_lo_label,
                    x=x,
                    y=lnorm_cv_lo_y)
@@ -99,7 +99,7 @@ meanlog_cv_hi <- log(mu) - sdlog_cv_hi^2/2
 lnorm_cv_hi_y <- dlnorm(x=x, meanlog=meanlog_cv_hi, sdlog=sdlog_cv_hi)
 # plot(lnorm_y~x)
 lnorm_cv_hi_sev <- nutriR::sev(ear=ear, cv=ear_cv, meanlog=meanlog_cv_hi, sdlog=sdlog_cv_hi) %>% round(., 0)
-lnorm_cv_hi_label <- paste0("Higher variability (", lnorm_cv_hi_sev, "%)")
+lnorm_cv_hi_label <- paste0("High variability (", lnorm_cv_hi_sev, "%)")
 lnorm_cv_hi_df <- tibble(dist=lnorm_cv_hi_label,
                          x=x,
                          y=lnorm_cv_hi_y)
@@ -119,8 +119,8 @@ base_theme <- theme(axis.text=element_text(size=6),
                     legend.text=element_text(size=5),
                     legend.title=element_text(size=6),
                     plot.tag = element_text(size=8),
-                    plot.subtitle = element_text(size=6),
-                    plot.title=element_text(size=7, face="bold"),
+                    plot.subtitle = element_text(size=7),
+                    plot.title=element_text(size=8, face="bold"),
                     # Gridlines
                     panel.grid.major = element_blank(),
                     panel.grid.minor = element_blank(),
@@ -137,7 +137,7 @@ g1 <- ggplot(df1, aes(x=x, y=y, color=dist)) +
   # Plot mean
   geom_vline(xintercept=mu, linetype="dotted", color="black") +
   # Labels
-  labs(x="Habitual intake", y='Density', tag="A",
+  labs(x="Habitual intake (mg)", y='Density', tag="A",
        title="Distribution matters",
        subtitle="Same mean and variability but different distribution") +
   scale_color_discrete(name="Distribution\n(% inadequate intake)") +
@@ -154,7 +154,7 @@ g2 <- ggplot(df2, aes(x=x, y=y, color=dist)) +
   # Plot mean
   geom_vline(xintercept=mu, linetype="dotted", color="black") +
   # Labels
-  labs(x="Habitual intake", y='Density', tag="B",
+  labs(x="Habitual intake (mg)", y='Density', tag="B",
        title="Variability matters",
        subtitle="Same mean and distribution but different variability") +
   scale_color_discrete(name="Variability\n(% inadequate intake)") +

@@ -55,7 +55,7 @@ stats <- data %>%
   mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
   # Calculate median percent overlap
   group_by(nutrient_type, nutrient, sex, age) %>%
-  summarise(poverlap=median(poverlap, na.rm=T)) %>%
+  summarise(poverlap=mean(poverlap, na.rm=T)) %>%
   ungroup()
 
 
@@ -80,6 +80,19 @@ dists_sim <- nutriR::generate_dists(dists) %>%
   # Add case
   left_join(dists %>% select(nutrient, sex, age_group, case))
 
+# Get EARs and percent overlaps
+dist_stats <- dists %>%
+  # Isolate EAR
+  group_by(case, nutrient, sex, age_group) %>%
+  summarize(ear=unique(ear)) %>%
+  # Add percent overlap
+  left_join(stats %>% select(-nutrient_type), by=c("nutrient", "sex", "age_group"="age")) %>%
+  mutate(poverlap_label=paste0(round(poverlap, 0), "% overlap")) %>%
+  # Add xpos/ypos
+  left_join(dists_sim %>% group_by(case) %>% summarize(ypos=max(density[is.finite(density)]), xpos=max(intake))) %>%
+  mutate(xpos=case_when(case=="Low overlap" ~ xpos,
+                        case=="Medium overlap" ~ 0.5,
+                        case=="High overlap" ~ 750))
 
 
 # Plot data
@@ -121,7 +134,7 @@ g1 <- ggplot(stats, aes(y=nutrient, x=age, fill=poverlap)) +
   # Labels
   labs(x="Age group (yr)", y="", tag="A") +
   # Legend
-  scale_fill_gradientn(name="Median\npercent overlap", lim=c(0,100),
+  scale_fill_gradientn(name="Mean\npercent overlap", lim=c(0,100),
                        colors=rev(RColorBrewer::brewer.pal(9, "YlOrRd"))) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
@@ -132,6 +145,14 @@ g1
 g2 <- ggplot(dists_sim %>% filter(case=="Low overlap"),
              aes(x=intake, y=density, color=country)) +
   geom_line(lwd=0.5) +
+  # Add % overlap label
+  annotate(geom="text",
+           x=dist_stats$xpos[dist_stats$case=="Low overlap"],
+           y=dist_stats$ypos[dist_stats$case=="Low overlap"],
+           label=dist_stats$poverlap_label[dist_stats$case=="Low overlap"],
+           size=1.8, hjust=1, vjust=1.5) +
+  # Add EAR
+  geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Low overlap"], linetype="solid", lwd=0.4) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
        title="Low overlap", subtitle="Potassium intake for 45-49-yr-old women", tag="B") +
@@ -144,6 +165,14 @@ g3 <- ggplot(dists_sim %>% filter(case=="Medium overlap"),
              aes(x=intake, y=density, color=country)) +
   geom_line(lwd=0.5) +
   lims(x=c(0,0.5)) +
+  # Add % overlap label
+  annotate(geom="text",
+           x=dist_stats$xpos[dist_stats$case=="Medium overlap"],
+           y=dist_stats$ypos[dist_stats$case=="Medium overlap"],
+           label=dist_stats$poverlap_label[dist_stats$case=="Medium overlap"],
+           size=1.8, hjust=1, vjust=1.5) +
+  # Add EAR
+  geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Medium overlap"], linetype="solid", lwd=0.4) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
        title="Medium overlap", subtitle="Omega-3 fatty acids for 55-59-yr-old men", tag="C") +
@@ -156,6 +185,14 @@ g4 <- ggplot(dists_sim %>% filter(case=="High overlap"),
              aes(x=intake, y=density, color=country)) +
   geom_line(lwd=0.5) +
   lims(x=c(0,750)) +
+  # Add % overlap label
+  annotate(geom="text",
+           x=dist_stats$xpos[dist_stats$case=="High overlap"],
+           y=dist_stats$ypos[dist_stats$case=="High overlap"],
+           label=dist_stats$poverlap_label[dist_stats$case=="High overlap"],
+           size=1.8, hjust=1, vjust=1.5) +
+  # Add EAR
+  geom_vline(xintercept=dist_stats$ear[dist_stats$case=="High overlap"], linetype="solid", lwd=0.4) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
        title="High overlap", subtitle="Vitamin C for 50-54-yr-old men", tag="D") +
