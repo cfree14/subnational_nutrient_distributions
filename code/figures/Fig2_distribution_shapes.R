@@ -68,6 +68,18 @@ data <- data_orig %>%
 # Build distribution examples
 ################################################################################
 
+# Calculate density at mean
+calc_dens_at_mean <- function(best_dist, mu, shape, rate, meanlog, sdlog){
+
+  # If gamma
+  if(best_dist=="gamma"){
+    dens_at_mean <- dgamma(x=mu, shape=shape, rate=rate)
+  }else{
+    dens_at_mean <- dlnorm(x=mu, meanlog=meanlog, sdlog=sdlog)
+  }
+  dens_at_mean
+}
+
 # CV examples
 ###################
 
@@ -75,14 +87,22 @@ data <- data_orig %>%
 dists_cv <- data_orig %>%
   # Filter
   filter(nutrient=="Calcium" & sex=="Females" & age_group=="20-24") %>%
-  filter(country %in% c("Burkina Faso", "United States", "Canada"))
+  filter(country %in% c("Burkina Faso", "United States", "Canada")) %>%
+  # Add density at mean
+  rowwise() %>%
+  mutate(dens_at_mean=calc_dens_at_mean(best_dist, mu, g_shape, g_rate, ln_meanlog, ln_sdlog)) %>%
+  ungroup() %>%
+  # Add country label
+  mutate(country_label=paste0(country, " (", round(sev, 0), "%)"))
 
 # Generate distributions to plot
 dist_cv_ear <- dists_cv$ear %>% unique()
-dist_cv_sim <- nutriR::generate_dists(dists_cv)
+dist_cv_sim <- nutriR::generate_dists(dists_cv) %>%
+  # Add country label
+  left_join(dists_cv %>% select(country, country_label))
 
 # Plot example distributions
-ggplot(dist_cv_sim, aes(x=intake, y=density, color=country)) +
+ggplot(dist_cv_sim, aes(x=intake, y=density, color=country_label)) +
   geom_line() +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
@@ -96,21 +116,29 @@ ggplot(dist_cv_sim, aes(x=intake, y=density, color=country)) +
 # Identify skewness examples
 dists_skew <- data_orig %>%
   # Filter
-  filter(nutrient=="Vitamin K" & sex=="Males" & age_group=="10-14") %>%
-  filter(country %in% c("Netherlands", "United States", "Belgium"))
+  filter(nutrient=="Vitamin A (RAE)" & sex=="Males" & age_group=="45-49") %>%
+  filter(country %in% c("Portugal", "Netherlands", "Italy")) %>%
+  # Add density at mean
+  rowwise() %>%
+  mutate(dens_at_mean=calc_dens_at_mean(best_dist, mu, g_shape, g_rate, ln_meanlog, ln_sdlog)) %>%
+  ungroup() %>%
+  # Add country label
+  mutate(country_label=paste0(country, " (", round(sev, 0), "%)"))
 
 # Generate distributions to plot
 dist_skew_ear <- dists_skew$ear %>% unique()
-dist_skew_sim <- nutriR::generate_dists(dists_skew)
+dist_skew_sim <- nutriR::generate_dists(dists_skew) %>%
+  left_join(dists_skew %>% select(country, country_label))
 
 # Plot example distributions
 ggplot(dist_skew_sim, aes(x=intake, y=density, color=country)) +
   geom_line() +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
-       title="Vitamin K intake for 10-14-yr-old boys") +
+       title="Vitamin A intake for 45-49-yr-old men") +
   # Theme
   theme_bw()
+
 
 # Plot data
 ################################################################################
@@ -118,8 +146,8 @@ ggplot(dist_skew_sim, aes(x=intake, y=density, color=country)) +
 # Theme
 base_theme <-  theme(axis.text=element_text(size=5),
                      axis.title=element_text(size=7),
-                     legend.text=element_text(size=5),
-                     legend.title=element_text(size=7),
+                     legend.text=element_text(size=4),
+                     legend.title=element_text(size=5),
                      strip.text=element_text(size=6),
                      plot.title=element_text(size=7),
                      plot.subtitle=element_text(size=6),
@@ -148,41 +176,51 @@ g1
 # Plot CV examples
 legend.x <- max(dist_cv_sim$density)
 legend.y <- max(dist_cv_sim$intake)
-g2 <- ggplot(dist_cv_sim, aes(x=intake, y=density, color=country)) +
-  # EAR
-  geom_vline(xintercept=dist_cv_ear, linetype="solid", lwd=0.5) +
+g2 <- ggplot(dist_cv_sim, aes(x=intake, y=density, color=country_label)) +
   # Intakes
-  geom_line() +
+  geom_line(lwd=0.3) +
+  # Plot means
+  geom_point(data=dists_cv, mapping=aes(x=mu, y=dens_at_mean, color=country_label),
+             inherit.aes = F, show.legend=F, size=0.6) +
+  geom_segment(data=dists_cv, mapping=aes(x=mu, xend=mu, y=0, yend=dens_at_mean, color=country_label),
+               linetype="dotted", lwd=0.3, inherit.aes = F, show.legend=F) +
+  # EAR
+  geom_vline(xintercept=dist_cv_ear, linetype="solid", lwd=0.3) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density", tag="B",
        title="Impact of variability",
        subtitle="Calcium intake for 20-24-yr-old women") +
   # Legend
-  scale_color_discrete(name="") +
+  scale_color_discrete(name="Country\n(% inadequate intake)") +
   # Theme
   theme_bw() + base_theme +
   theme(legend.position = c(0.7, 0.8),
-        legend.key.size = unit(0.3, "cm"),
+        legend.key.size = unit(0.2, "cm"),
         legend.background = element_rect(fill=alpha('blue', 0)),
         axis.text.y = element_text(angle = 90, hjust = 0.5))
 g2
 
 # Plot skewness examples
-g3 <- ggplot(dist_cv_skew, aes(x=intake, y=density, color=country)) +
-  # EAR
-  geom_vline(xintercept=dist_skew_ear, linetype="dotted") +
+g3 <- ggplot(dist_skew_sim, aes(x=intake, y=density, color=country_label)) +
   # Intakes
-  geom_line() +
+  geom_line(lwd=0.3) +
+  # Plot means
+  geom_point(data=dists_skew, mapping=aes(x=mu, y=dens_at_mean, color=country_label),
+             inherit.aes = F, show.legend=F, size=0.6) +
+  geom_segment(data=dists_skew, mapping=aes(x=mu, xend=mu, y=0, yend=dens_at_mean, color=country_label),
+               linetype="dotted", lwd=0.3, inherit.aes = F, show.legend=F) +
+  # EAR
+  geom_vline(xintercept=dist_skew_ear, linetype="solid", lwd=0.3) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density", tag="C",
        title="Impact of skewness",
-       subtitle="Vitamin K intake for 10-14-yr-old boys") +
+       subtitle="Vitamin A intake for 40-45-yr-old men") +
   # Legend
-  scale_color_discrete(name="") +
+  scale_color_discrete(name="Country\n(% inadequate intake)") +
   # Theme
   theme_bw() + base_theme +
   theme(legend.position = c(0.7, 0.8),
-        legend.key.size = unit(0.3, "cm"),
+        legend.key.size = unit(0.2, "cm"),
         legend.background = element_rect(fill=alpha('blue', 0)),
         axis.text.y = element_text(angle = 90, hjust = 0.5))
 g3
