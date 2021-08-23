@@ -119,6 +119,8 @@ base_theme <- theme(axis.text=element_text(size=6),
                     legend.text=element_text(size=5),
                     legend.title=element_text(size=6),
                     plot.tag = element_text(size=8),
+                    plot.subtitle = element_text(size=6),
+                    plot.title=element_text(size=7, face="bold"),
                     # Gridlines
                     panel.grid.major = element_blank(),
                     panel.grid.minor = element_blank(),
@@ -135,7 +137,9 @@ g1 <- ggplot(df1, aes(x=x, y=y, color=dist)) +
   # Plot mean
   geom_vline(xintercept=mu, linetype="dotted", color="black") +
   # Labels
-  labs(x="Habitual intake", y='Density', tag="A") +
+  labs(x="Habitual intake", y='Density', tag="A",
+       title="Distribution matters",
+       subtitle="Same mean and variability but different distribution") +
   scale_color_discrete(name="Distribution\n(% inadequate intake)") +
   # Theme
   theme_bw() + base_theme +
@@ -150,8 +154,10 @@ g2 <- ggplot(df2, aes(x=x, y=y, color=dist)) +
   # Plot mean
   geom_vline(xintercept=mu, linetype="dotted", color="black") +
   # Labels
-  labs(x="Habitual intake", y='Density', tag="B") +
-  scale_color_discrete(name="Distribution\n(% inadequate intake)") +
+  labs(x="Habitual intake", y='Density', tag="B",
+       title="Variability matters",
+       subtitle="Same mean and distribution but different variability") +
+  scale_color_discrete(name="Variability\n(% inadequate intake)") +
   # Theme
   theme_bw() + base_theme +
   theme(legend.position = c(0.75, 0.8))
@@ -162,7 +168,7 @@ g2
 g <- gridExtra::grid.arrange(g1, g2, nrow=1)
 
 # Export
-ggsave(g, filename=file.path(plotdir, "Fig0_stylized_examples.png"),
-       width=6.5, height=2.25, units="in", dpi=600)
+ggsave(g, filename=file.path(plotdir, "Fig1_stylized_examples.png"),
+       width=6.5, height=2.5, units="in", dpi=600)
 
 

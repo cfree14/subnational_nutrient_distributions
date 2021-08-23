@@ -69,7 +69,7 @@ g <- ggplot(stats, aes(y=nutrient, x=age, fill=poverlap)) +
 g
 
 # Export plot
-ggsave(g, filename=file.path(plotdir, "Fig1_similarity_across_countries.png"),
+ggsave(g, filename=file.path(plotdir, "Fig3_similarity_across_countries.png"),
        width=6.5, height=5, units="in", dpi=600)
 
 

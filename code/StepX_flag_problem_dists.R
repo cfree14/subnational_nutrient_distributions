@@ -79,7 +79,10 @@ ggsave(g, filename=file.path(plotdir, "FigX_anamalous_distributions.png"),
 
 
 
+data_prob <- data %>%
+  filter(pdiff>=100)
 
+write.csv(data_prob, file=file.path(datadir, "anamalous_distributions_in_spade_output.csv"), row.names=F)
 
 
 
