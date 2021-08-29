@@ -96,7 +96,7 @@ write.csv(data_prob, file=file.path(datadir, "anamalous_distributions_in_spade_o
 ##################################
 
 # Cap value
-cap <- 20
+cap <- 5
 
 # Build data
 data2 <- data_orig %>%
@@ -110,20 +110,32 @@ data2 <- data_orig %>%
             mu_div_ear_cap=pmin(mu_div_ear, cap)) %>%
   ungroup()
 
+# Mark ones to investigate
+data2_probs <- data2 %>%
+  filter(mu_div_ear>=3)
+
 # Plot data
 g2 <- ggplot(data2, aes(y=nutrient, x=country, fill=mu_div_ear_cap)) +
   facet_wrap(~sex) +
   geom_tile(color="grey10") +
+  # Porblem points
+  geom_point(data=data2_probs, aes(y=nutrient, x=country), inherit.aes = F) +
   # Labels
   labs(x="", y="") +
   # Legend
   scale_fill_gradient2(name="Mean intake / EAR",
                        midpoint=1, mid="white", low="navy", high="darkred",
-                       lim=c(0, cap)) +
+                       lim=c(0, cap),
+                       breaks=0:5,
+                       labels=c(0:4, ">5")) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
   theme_bw() + base_theme
 g2
+
+# Export data
+ggsave(g2, filename=file.path(plotdir, "FigX_anamalous_distributions2.png"),
+       width=6.5, height=3.5, units="in", dpi=600)
 
 
 

@@ -25,7 +25,13 @@ sapply(list.files(codedir), function(x) source(file.path(codedir, x)))
 dris <-nutriR::dris
 
 # Read distributions
-dists_full <- nutriR::dists_full %>%
+# dists_full_orig <- nutriR::dists_full # when nutriR is finalized
+dists_full_orig <- readRDS(file=file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
+
+# Format distributions
+dists_full <- dists_full_orig %>%
+  # Remove un-fit distributions
+  filter(best_dist!="none") %>%
   # Remove children
   filter(sex!="Children") %>%
   # Remove problem countries
@@ -97,19 +103,22 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
 
      # Illustrate distributions
      h3("Subnational habitual intake distributions"),
-     p("Habitual intake distributions by country, sex, and age group."),
+     p("The figure below illustrates habitual intake distributions by sex and age group within each country. The vertical lines indicate the median EARs for men and women across availbale age groups (if an EAR is available)."),
+     radioButtons(inputId = "scales1", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
      plotOutput(outputId = "plot_intake_dists", width=800, height=1000),
      br(),
 
      # Illustrate distributions - difference among countries
      h3("Similarity in subnational habitual intake distributions across countries"),
-     p("In the figure below, the similarity in habitual intake distributions across countries are compared within sex and age groups. The similarity is quantified as the mean percent overlap of all pairwise combinations of countries with available data. The percent overlap is calculated as the Bhattacharyya coefficient."),
+     p("In the figure below, the similarity in habitual intake distributions across countries are compared within sex and age groups. The similarity is quantified as the mean percent overlap of all pairwise combinations of countries with available data. The percent overlap is calculated as the Bhattacharyya coefficient. The solid vertical lines indicate the EAR for the sex-age group, if an EAR is available."),
+     radioButtons(inputId = "scales2", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
      plotOutput(outputId = "plot_intake_dists_age_group", width=1000, height=1200),
      br(),
 
      # Illustrate means
      h3("Subnational habitual intake means"),
      p("The figure below illustrate the mean habitual intake for each country, sex, and age group compared to the Estimated Average Requirement (EAR), when available. The EAR is from the U.S. Food and Nutrition Board of the National Academy of Sciences."),
+     radioButtons(inputId = "scales3", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
      plotOutput(outputId = "plot_intake_means", width=600, height=2000),
      br(),
 
@@ -177,6 +186,7 @@ server <- function(input, output, session){
   output$plot_intake_dists <- renderPlot({
     g <- plot_intake_dists(data = dists_full,
                            nutrient = input$nutrient,
+                           scales = input$scales1,
                            base_theme = base_theme)
     g
   })
@@ -186,6 +196,7 @@ server <- function(input, output, session){
     g <- plot_intake_dists_age_group(data = dists_full,
                                      nutrient = input$nutrient,
                                      overlaps = overlaps,
+                                     scales = input$scales2,
                                      base_theme = base_theme)
     g
   })
@@ -194,6 +205,7 @@ server <- function(input, output, session){
   output$plot_intake_means <- renderPlot({
     g <- plot_intake_means(data = dists_full,
                            nutrient = input$nutrient,
+                           scales = input$scales3,
                            base_theme = base_theme)
     g
   })

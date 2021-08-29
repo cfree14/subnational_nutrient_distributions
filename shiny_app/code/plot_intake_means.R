@@ -1,7 +1,7 @@
 
 # Plot coverage
 # data <- dists_full; nutrient <- "Calcium"
-plot_intake_means <- function(data, nutrient, base_theme){
+plot_intake_means <- function(data, nutrient, scales, base_theme){
 
   # Nutrient
   nutrient_do <- nutrient
@@ -10,6 +10,13 @@ plot_intake_means <- function(data, nutrient, base_theme){
   sexes <- data$sex %>% unique()
   age_groups <- data$age_group %>% unique()
   countries <- data$country %>% unique()
+
+  # X-axis scales
+  if(scales=="Fixed"){
+    scales_use <- "free_y"
+  }else{
+    scales_use <- "free"
+  }
 
   # Subset data
   sdata <- data %>%
@@ -29,7 +36,7 @@ plot_intake_means <- function(data, nutrient, base_theme){
   # Plot data
   y_label <- paste0("Mean intake (", nutrient_units, ")")
   g <- ggplot(sdata, aes(x=age_group, y=mu, fill=sev)) +
-    facet_grid(country~sex, drop = F) +
+    facet_grid(country~sex, drop = F, scales=scales_use) +
     geom_bar(stat="identity", color="black", lwd=0.2) +
     # Plot EARs
     geom_line(data=ears, mapping=aes(x=age_group, y=ear, group=sex), inherit.aes=F) +
