@@ -30,7 +30,8 @@ file_key <- tibble(filename=intake_files) %>%
   # Break filename apart
   mutate(filename_temp=filename) %>%
   mutate(filename_temp=gsub("_h_w_", "_hw_", filename_temp),
-         filename_temp=gsub("omega_", "omega", filename_temp)) %>%
+         filename_temp=gsub("omega_", "omega", filename_temp),
+         filename_temp=gsub("vita_re", "vitare", filename_temp)) %>%
   tidyr::separate(col=filename_temp, into=c("country", "sex", "nutrient"), sep="_") %>%
   # Recode country
   mutate(country=stringr::str_to_title(country),
@@ -57,10 +58,13 @@ file_key <- tibble(filename=intake_files) %>%
                          "bcarot"="beta-Carotene",
                          "betacarot"="beta-Carotene",
                          "betacrypt"="beta-cryptoxanthin",
+                         "biotin"="Biotin", # Confirm with Simone
+                         "caff"="Caffeine", # Confirm with Simone
                          "calc"="Calcium",
                          "carb"="Carbohydrates",
                          "chol"="Choline",
                          "cholest"="Cholesterol",
+                         "chrom"="Chromium", # Confirm with Simone
                          "cu"="Copper",
                          "energy"="Energy",
                          "fat"="Fat",
@@ -79,6 +83,7 @@ file_key <- tibble(filename=intake_files) %>%
                          "niac"="Niacin",
                          "omega3"="Omega-3 fatty acids",
                          "omega6"="Omega-6 fatty acids",
+                         "panto"="Pantothenic acid",  # Confirm with Simone
                          "phos"="Phosphate",
                          "plantomega3"="Plant-based omega-3 fatty acids",
                          "pota"="Potassium",
@@ -97,6 +102,7 @@ file_key <- tibble(filename=intake_files) %>%
                          "theo"="Theobromine",
                          "thia"="Thiamine",
                          "vita"="Vitamin A (RAE)",
+                         "vitare"="Vitamin A (RE)",
                          "vitb12"="Vitamin B12",
                          "vitb6"="Vitamin B6",
                          "vitc"="Vitamin C",
@@ -132,6 +138,11 @@ check1 <- file_key %>%
   summarize(n=n(),
             files=paste(sort(unique(filename)), collapse = ", ")) %>%
   filter(n!=1)
+
+# Check nutrients
+nutr_key_check <- file_key %>%
+  group_by(type1, type2, nutrient, units) %>%
+  summarize(ncountries=n_distinct(country))
 
 # Export file key
 write.csv(file_key, file=file.path(datadir, "SPADE_file_key.csv"), row.names=F)

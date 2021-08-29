@@ -22,7 +22,7 @@ data_orig <- readRDS(file=file.path(datadir, "percent_overlap_among_country_pair
   filter(iso1!="PHL" | iso2=="PHL")
 
 # Read distribution data
-dists_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_22countries_expanded.Rds"))
+dists_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
 
 
 # Build data
