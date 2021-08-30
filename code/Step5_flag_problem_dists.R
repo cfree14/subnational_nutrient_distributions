@@ -22,7 +22,6 @@ plotdir <- "figures"
 data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
 
 
-
 # Inspect CV distribution
 ################################################################################
 

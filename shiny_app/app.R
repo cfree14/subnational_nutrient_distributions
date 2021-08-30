@@ -149,6 +149,12 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
                  choices = nutrients,  multiple = F, selected="Calcium"),
      br(),
 
+     # Illustrate distribution
+     h3("Habitual intake distributions"),
+     p("The figure belows shows habitual intake distributions ny nutrient, sex, and age within the selected country. The vertical lines indicate the EAR, if available."),
+     plotOutput(outputId = "plot_intake_dists_cntry", width=800, height=1600),
+     br(),
+
      # Illustrate SPADE ouput and fits
      h3("SPADE output and distribution fits"),
      p("In the figure below, the shading indicates the distributions of habitual intakes estimated by SPADE and the lines indicate the distribution fit to this data."),
@@ -233,6 +239,14 @@ server <- function(input, output, session){
     g <- plot_coverage_by_country(data = dists_full,
                                   country = input$country,
                                   base_theme = base_theme)
+    g
+  })
+
+  # Plot inadequate intakes eithin a country
+  output$plot_intake_dists_cntry <- renderPlot({
+    g <- plot_intake_dists_cntry(data = dists_full,
+                                 country = input$country,
+                                 base_theme = base_theme)
     g
   })
 
