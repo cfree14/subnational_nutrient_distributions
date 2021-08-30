@@ -30,8 +30,8 @@ data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countri
 options(scipen=999)
 
 # CV cutoffs
-cv_lo <- 0.05
-cv_hi <- 3
+cv_lo <- 0.1
+cv_hi <- 0.75
 
 # CV histogram
 g <- ggplot(data_orig, aes(x=cv)) +
@@ -97,7 +97,9 @@ theme2 <-  theme(axis.text=element_text(size=5),
 
 # Plot lo CVs
 g <- ggplot(data_cv_lo_sim, aes(x=intake, y=density, color=cv)) +
-  facet_wrap(~dist_id, scales="free", ncol=5) +
+  # Paginate
+  ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol=5, nrow = 6, page=1) +
+  # Densities
   geom_line() +
   # CV value
   geom_text(data=cv_lo_labels, mapping=aes(x=0, y=density, label=cv_label), hjust=0, vjust=1, size=2.3, color="black") +
@@ -110,7 +112,13 @@ g <- ggplot(data_cv_lo_sim, aes(x=intake, y=density, color=cv)) +
   theme_bw() + theme2
 g
 
-# Export plot
+# Loop through pages
+plotname <- "AppendixA_cv_problems_low.pdf"
+pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
+for(i in 1:npages){
+  print(g + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
+}
+dev.off()
 
 
 # Inspect high CV values
@@ -128,7 +136,7 @@ data_cv_hi_sim <- nutriR::generate_dists(data_cv_hi) %>%
   mutate(sex_id=recode(sex, "Females"="F", "Males"="M"),
          dist_id=paste0(nutrient, "\n", paste(iso3, sex_id, age_group, sep="-"))) %>%
   # Add CV
-  left_join(data_cv_lo %>% select(country, nutrient, sex, age_group, cv))
+  left_join(data_cv_hi %>% select(country, nutrient, sex, age_group, cv))
 
 # Build CV labels
 cv_hi_labels <- data_cv_hi_sim %>%
@@ -163,7 +171,9 @@ theme2 <-  theme(axis.text=element_text(size=5),
 
 # Plot
 g <- ggplot(data_cv_hi_sim, aes(x=intake, y=density, color=cv)) +
-  facet_wrap(~dist_id, scales="free", ncol=5) +
+  # Paginate
+  ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 7, page=1) +
+  # Plot lines
   geom_line() +
   # CV value
   geom_text(data=cv_hi_labels, mapping=aes(x=0, y=density, label=cv_label), hjust=0, vjust=1, size=2.3, color="black", inherit.aes=F) +
@@ -174,9 +184,44 @@ g <- ggplot(data_cv_hi_sim, aes(x=intake, y=density, color=cv)) +
   guides(color = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
   theme_bw() + theme2
+#g
+
+# Number of pages
+npages <- ggforce::n_pages(g)
+
+# Loop through pages
+plotname <- "AppendixB_cv_problems_high.pdf"
+pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
+for(i in 1:npages){
+  print(g + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
+}
+dev.off()
+
+
+# Finalize CV cutoff
+################################################################################
+
+# Turn off scientific notation
+options(scipen=999)
+
+# CV cutoffs
+cv_lo_final <- 0.02
+cv_hi_final <- 1
+
+# CV histogram
+g <- ggplot(data_orig, aes(x=cv)) +
+  geom_histogram(binwidth=0.05) +
+  # Cutoffs
+  geom_vline(xintercept=c(cv_lo_final, cv_hi_final)) +
+  # Labels
+  labs(x="Coefficient of variation (CV)", y="Frequency") +
+  # Limits
+  scale_x_continuous(trans="log2", breaks=c(0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500)) +
+  # Theme
+  theme_bw()
 g
 
-# Export plot
+
 
 
 # Build data
