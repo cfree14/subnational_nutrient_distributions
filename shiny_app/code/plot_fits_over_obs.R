@@ -21,7 +21,7 @@ plot_fits_over_obs <- function(data, country, nutrient, base_theme, datadir){
     filter(nutrient==nutrient_do & country==country_do)
 
   # Generate distributions
-  sdata_sim <- nutriR::generate_dists(sdata) %>%
+  sdata_sim <- nutriR::generate_dists(sdata, perc=0.99) %>%
     mutate(sex=factor(sex, levels=sexes))
 
   # SPADE output

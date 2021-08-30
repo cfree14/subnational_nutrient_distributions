@@ -34,7 +34,7 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
   nutrient_units <- sdata$nutrient_units %>% unique()
 
   # Generate distributions
-  sdata_sim <- nutriR::generate_dists(sdata)
+  sdata_sim <- nutriR::generate_dists(sdata, perc=0.99)
 
   # Build overlap labels
   if(scales=="Free"){

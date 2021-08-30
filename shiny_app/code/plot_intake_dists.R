@@ -29,7 +29,7 @@ plot_intake_dists <- function(data, nutrient, scales="Fixed", base_theme){
   nutrient_units <- sdata$nutrient_units %>% unique()
 
   # Generate distributions
-  sdata_sim <- nutriR::generate_dists(sdata)
+  sdata_sim <- nutriR::generate_dists(sdata, perc=0.99)
 
   # Calculate EARs
   ears <- sdata %>%
