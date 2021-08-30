@@ -63,6 +63,6 @@ g <- ggplot(stats, aes(x=country, y=nutrient, fill=sexes)) +
 g
 
 # Export data
-ggsave(g, filename=file.path(plotdir, "FigSX_data_coverage_broad.png"),
-       width=6.5, height=6.5, units="in", dpi=600)
+ggsave(g, filename=file.path(plotdir, "FigS2_data_coverage_broad.png"),
+       width=6.5, height=6.75, units="in", dpi=600)
 

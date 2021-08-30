@@ -62,5 +62,5 @@ g <- ggplot() +
 g
 
 # Export
-ggsave(g, filename=file.path(plotdir, "FigSX_country_map.png"),
+ggsave(g, filename=file.path(plotdir, "FigS1_country_map.png"),
        width=6.5, height=3, units="in", dpi=600)

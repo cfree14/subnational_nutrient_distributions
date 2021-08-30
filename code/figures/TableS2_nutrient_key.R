@@ -31,6 +31,6 @@ stats <- data %>%
   ungroup()
 
 # Export
-write.csv(stats, file=file.path(tabledir, "TableS1_nutrient_key.csv"), row.names=F)
+write.csv(stats, file=file.path(tabledir, "TableS2_nutrient_key.csv"), row.names=F)
 
 

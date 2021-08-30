@@ -12,13 +12,13 @@ library(countrycode)
 library(fitdistrplus)
 
 # Directories
-inputdir <- "/Users/cfree/Dropbox/subnational_distributions/all_intakes" # On Chris Free's computer
+inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
 datadir <- "data"
 plotdir <- "figures"
 tabledir <- "tables"
 
 # Read distribution key
-dists <- readRDS(file.path(datadir, "nutrient_intake_distributions_21countries.Rds")) %>%
+dists <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries.Rds")) %>%
   filter(best_dist!="none")
 
 
@@ -26,7 +26,7 @@ dists <- readRDS(file.path(datadir, "nutrient_intake_distributions_21countries.R
 ################################################################################
 
 # Read example data
-data_orig <- read.csv("/Users/cfree/Dropbox/Chris/UCSB/projects/nutrition/subnational_distributions/all_intakes/bang_w_iron.csv", as.is=T)
+data_orig <- read.csv(file.path(inputdir, "bang_w_iron.csv"), as.is=T)
 
 # Format data
 data <- data_orig %>%
