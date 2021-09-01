@@ -33,6 +33,7 @@ cv_lo <- 0.1
 cv_hi <- 0.75
 
 # CV histogram
+range(data_orig$cv, na.rm=T)
 g <- ggplot(data_orig, aes(x=cv)) +
   geom_histogram(binwidth=0.05) +
   # Cutoffs
@@ -40,7 +41,7 @@ g <- ggplot(data_orig, aes(x=cv)) +
   # Labels
   labs(x="Coefficient of variation (CV)", y="Frequency") +
   # Limits
-  scale_x_continuous(trans="log2", breaks=c(0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500)) +
+  scale_x_continuous(trans="log2", breaks=c(0.0005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500)) +
   # Theme
   theme_bw()
 g
@@ -72,7 +73,7 @@ cv_lo_labels <- data_cv_lo_sim %>%
   # Add CV
   left_join(data_cv_lo %>% select(country, nutrient, sex, age_group, cv)) %>%
   # Format CV
-  mutate(cv_label=round(cv, 4)) %>%
+  mutate(cv_label=round(cv, 3) %>% format(digits=3)) %>%
   # Arrange
   arrange(cv) %>%
   # Factor
@@ -111,6 +112,9 @@ g <- ggplot(data_cv_lo_sim, aes(x=intake, y=density, color=cv)) +
   theme_bw() + theme2
 g
 
+# Number of pages
+npages <- ggforce::n_pages(g)
+
 # Loop through pages
 plotname <- "AppendixA_cv_problems_low.pdf"
 pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
@@ -146,7 +150,7 @@ cv_hi_labels <- data_cv_hi_sim %>%
   # Add CV
   left_join(data_cv_hi %>% select(country, nutrient, sex, age_group, cv)) %>%
   # Format CV
-  mutate(cv_label=round(cv, 4)) %>%
+  mutate(cv_label=round(cv, 2) %>% format(., digits=2)) %>%
   # Arrange
   arrange(cv) %>%
   # Factor
@@ -169,9 +173,9 @@ theme2 <-  theme(axis.text=element_text(size=5),
                  legend.position = "bottom")
 
 # Plot
-g <- ggplot(data_cv_hi_sim, aes(x=intake, y=density, color=cv)) +
+g2 <- ggplot(data_cv_hi_sim, aes(x=intake, y=density, color=cv)) +
   # Paginate
-  ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 7, page=1) +
+  ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=1) +
   # Plot lines
   geom_line() +
   # CV value
@@ -183,16 +187,16 @@ g <- ggplot(data_cv_hi_sim, aes(x=intake, y=density, color=cv)) +
   guides(color = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
   theme_bw() + theme2
-#g
+g2
 
 # Number of pages
-npages <- ggforce::n_pages(g)
+npages <- ggforce::n_pages(g2)
 
 # Loop through pages
 plotname <- "AppendixB_cv_problems_high.pdf"
 pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
 for(i in 1:npages){
-  print(g + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
+  print(g2 + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
 }
 dev.off()
 
@@ -205,28 +209,38 @@ options(scipen=999)
 
 # CV cutoffs
 cv_lo_final <- 0.02
-cv_hi_final <- 1
 
 # CV histogram
 g <- ggplot(data_orig, aes(x=cv)) +
   geom_histogram(binwidth=0.05) +
   # Cutoffs
-  geom_vline(xintercept=c(cv_lo_final, cv_hi_final)) +
+  geom_vline(xintercept=c(cv_lo_final)) +
   # Labels
   labs(x="Coefficient of variation (CV)", y="Frequency") +
   # Limits
-  scale_x_continuous(trans="log2", breaks=c(0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500)) +
+  scale_x_continuous(trans="log2",
+                     breaks=c(0.01, 0.05, 0.1, 0.5, 1, 5, 10, 50, 100, 500),
+                     labels=c("0.01", "0.05", "0.1", "0.5", "1", "5", "10", "50", "100", "500")) +
   # Theme
-  theme_bw()
+  theme_bw() +
+  theme(axis.text=element_text(size=5),
+        axis.title=element_text(size=8),
+        # Gridlines
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"))
 g
 
+# Export plot
+ggsave(g, filename=file.path(plotdir, "FigSX_cv_cutoffs.png"),
+       width=3.5, height=3.5, units="in", dpi=600)
 
 
-
-# Build data
+# Approach #1: Mean relative to median
 ################################################################################
 
-# Format data
+# Build data
 data <- data_orig %>%
   # Simplify
   select(country, iso3, nutrient_type, nutrient, nutrient_units, sex, age_group, mu) %>%
@@ -243,10 +257,6 @@ data <- data_orig %>%
          pdiff_cap=pmin(pdiff, 500)) %>%
   # Simplify
   filter(sex!="Children")
-
-
-# Plot data
-################################################################################
 
 # Base theme
 base_theme <-   theme(axis.text=element_text(size=6),
@@ -277,16 +287,14 @@ g <- ggplot(data, aes(y=nutrient, x=country, fill=pdiff_cap)) +
   theme_bw() + base_theme
 g
 
-# Export data
-ggsave(g, filename=file.path(plotdir, "FigX_anamalous_distributions.png"),
+# Export plot
+ggsave(g, filename=file.path(plotdir, "FigX_anamalous_distributions1.png"),
        width=6.5, height=7.5, units="in", dpi=600)
 
-
-
+# Export data
 data_prob <- data %>%
   filter(pdiff>=100)
-
-write.csv(data_prob, file=file.path(datadir, "anamalous_distributions_in_spade_output.csv"), row.names=F)
+write.csv(data_prob, file=file.path(datadir, "anamalous_distributions_in_spade_output1.csv"), row.names=F)
 
 
 

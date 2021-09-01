@@ -16,7 +16,8 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_22countries_expanded.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")) %>%
+  filter(status=="Fit")
 
 
 # Build data

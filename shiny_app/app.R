@@ -144,24 +144,24 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      plotOutput(outputId = "plot_coverage_by_country", width=600, height=600),
      br(),
 
-     # Select a nutrient
-     selectInput(inputId = "nutrient2", label = "Select a nutrient\n(only nutrients with data are listed):",
-                 choices = nutrients,  multiple = F, selected="Calcium"),
-     br(),
-
      # Illustrate distribution
      h3("Habitual intake distributions"),
      p("The figure belows shows habitual intake distributions ny nutrient, sex, and age within the selected country. The vertical lines indicate the EAR, if available."),
      plotOutput(outputId = "plot_intake_dists_cntry", width=800, height=1600),
      br(),
 
-     # Illustrate SPADE ouput and fits
-     h3("SPADE output and distribution fits"),
-     p("In the figure below, the shading indicates the distributions of habitual intakes estimated by SPADE and the lines indicate the distribution fit to this data."),
-     plotOutput(outputId = "plot_fits_over_obs", width=800, height=800),
-     br(),
+     # # Select a nutrient
+     # selectInput(inputId = "nutrient2", label = "Select a nutrient\n(only nutrients with data are listed):",
+     #             choices = nutrients,  multiple = F, selected="Calcium"),
+     # br(),
+     #
+     # # Illustrate SPADE ouput and fits
+     # h3("SPADE output and distribution fits"),
+     # p("In the figure below, the shading indicates the distributions of habitual intakes estimated by SPADE and the lines indicate the distribution fit to this data."),
+     # plotOutput(outputId = "plot_fits_over_obs", width=800, height=800),
+     # br(),
 
-     # Illustrate SPADE ouput and fits
+     # Prevalence of inadequate intakes
      h3("Prevalence of inadequate intakes"),
      p("The figure below indicates the prevalence on inadequate nutrient intakes within the selected country by sex and age group."),
      plotOutput(outputId = "plot_inadequate_intakes_in_a_country", width=800, height=800),
@@ -250,15 +250,15 @@ server <- function(input, output, session){
     g
   })
 
-  # Plot  SPADE ouput and fits
-  output$plot_fits_over_obs <- renderPlot({
-    g <- plot_fits_over_obs(data = dists_full,
-                            nutrient = input$nutrient2,
-                            country = input$country,
-                            base_theme = base_theme,
-                            datadir = datadir)
-    g
-  })
+  # # Plot  SPADE ouput and fits
+  # output$plot_fits_over_obs <- renderPlot({
+  #   g <- plot_fits_over_obs(data = dists_full,
+  #                           nutrient = input$nutrient2,
+  #                           country = input$country,
+  #                           base_theme = base_theme,
+  #                           datadir = datadir)
+  #   g
+  # })
 
   # Plot inadequate intakes eithin a country
   output$plot_inadequate_intakes_in_a_country <- renderPlot({

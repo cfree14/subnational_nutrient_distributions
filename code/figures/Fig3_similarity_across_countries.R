@@ -17,12 +17,11 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read overlap data
-data_orig <- readRDS(file=file.path(datadir, "percent_overlap_among_country_pairs.Rds")) %>%
-  # Remove Phillipines ---- TEMPORARY!!!! FIX PHILLIPINES!!!
-  filter(iso1!="PHL" | iso2=="PHL")
+data_orig <- readRDS(file=file.path(datadir, "percent_overlap_among_country_pairs.Rds"))
 
 # Read distribution data
-dists_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
+dists_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")) %>%
+  filter(status=="Fit")
 
 
 # Build data
@@ -55,23 +54,19 @@ stats <- data %>%
   mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
   # Calculate median percent overlap
   group_by(nutrient_type, nutrient, sex, age) %>%
-  summarise(poverlap=mean(poverlap, na.rm=T)) %>%
+  summarise(poverlap=median(poverlap, na.rm=T)) %>%
   ungroup()
 
 
 # Examples
 ################################################################################
 
-# Low overlap: Potassiom Females 45-49
-# Medium overlap: Omega-3 fatty acids Males 55-59
-# High overlap: Vitamin B-12 Females 50-54
-
 # Distributions to use
-dists <- dists_full %>%
+dists <- dists_orig %>%
   # Add cases
-  mutate(case = case_when(nutrient == "Potassium" & sex=="Females" & age_group=="45-49" ~ "Low overlap",
-                          nutrient == "Omega-3 fatty acids" & sex=="Males" & age_group=="55-59" ~ "Medium overlap",
-                          nutrient == "Vitamin C" & sex=="Males" & age_group=="50-54" ~ "High overlap")) %>%
+  mutate(case = case_when(nutrient == "Vitamin K" & sex=="Females" & age_group=="75-79" ~ "Low overlap",
+                          nutrient == "Calcium" & sex=="Females" & age_group=="20-24" ~ "Medium overlap",
+                          nutrient == "Magnesium" & sex=="Males" & age_group=="25-29" ~ "High overlap")) %>%
   # Filter
   filter(!is.na(case))
 
@@ -91,9 +86,22 @@ dist_stats <- dists %>%
   # Add xpos/ypos
   left_join(dists_sim %>% group_by(case) %>% summarize(ypos=max(density[is.finite(density)]), xpos=max(intake))) %>%
   mutate(xpos=case_when(case=="Low overlap" ~ xpos,
-                        case=="Medium overlap" ~ 0.5,
-                        case=="High overlap" ~ 750))
+                        case=="Medium overlap" ~ xpos,
+                        case=="High overlap" ~ xpos))
 
+# Example dists key
+dists_ex_key <- dists %>%
+  select(case, nutrient_type, nutrient, sex, age_group) %>%
+  unique() %>%
+  mutate(sex1=recode(sex,
+                    "Females"="women",
+                    "Males"="men"),
+         title=paste0(nutrient, " intake for ", age_group, "-yr-old ", sex1)) %>%
+  mutate(label=recode(case,
+                      "Low overlap"="B",
+                      "Medium overlap"="C",
+                      "High overlap"="D")) %>%
+  rename(age=age_group)
 
 # Plot data
 ################################################################################
@@ -131,10 +139,12 @@ subpanel_theme <- theme(axis.text=element_text(size=5),
 g1 <- ggplot(stats, aes(y=nutrient, x=age, fill=poverlap)) +
   facet_grid(nutrient_type~sex, space="free_y", scales="free_y") +
   geom_raster() +
+  # Sub-panel points
+  geom_text(data=dists_ex_key, mapping=aes(y=nutrient, x=age, label=label), inherit.aes = F, size=2.5) +
   # Labels
   labs(x="Age group (yr)", y="", tag="A") +
   # Legend
-  scale_fill_gradientn(name="Mean\npercent overlap", lim=c(0,100),
+  scale_fill_gradientn(name="Median\npercent overlap",
                        colors=rev(RColorBrewer::brewer.pal(9, "YlOrRd"))) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
@@ -142,6 +152,7 @@ g1 <- ggplot(stats, aes(y=nutrient, x=age, fill=poverlap)) +
 g1
 
 # Low overlap
+title <- dists_ex_key$title[dists_ex_key$case=="Low overlap"]
 g2 <- ggplot(dists_sim %>% filter(case=="Low overlap"),
              aes(x=intake, y=density, color=country)) +
   geom_line(lwd=0.5) +
@@ -155,16 +166,16 @@ g2 <- ggplot(dists_sim %>% filter(case=="Low overlap"),
   geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Low overlap"], linetype="solid", lwd=0.4) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
-       title="Low overlap", subtitle="Potassium intake for 45-49-yr-old women", tag="B") +
+       title="Low overlap", subtitle=title, tag="B") +
   # Theme
   theme_bw() + subpanel_theme
 g2
 
 # Medium overlap
+title <- dists_ex_key$title[dists_ex_key$case=="Medium overlap"]
 g3 <- ggplot(dists_sim %>% filter(case=="Medium overlap"),
              aes(x=intake, y=density, color=country)) +
   geom_line(lwd=0.5) +
-  lims(x=c(0,0.5)) +
   # Add % overlap label
   annotate(geom="text",
            x=dist_stats$xpos[dist_stats$case=="Medium overlap"],
@@ -175,16 +186,17 @@ g3 <- ggplot(dists_sim %>% filter(case=="Medium overlap"),
   geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Medium overlap"], linetype="solid", lwd=0.4) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
-       title="Medium overlap", subtitle="Omega-3 fatty acids for 55-59-yr-old men", tag="C") +
+       title="Medium overlap", subtitle=title, tag="C") +
   # Theme
   theme_bw() + subpanel_theme
 g3
 
 # Merge plots
+title <- dists_ex_key$title[dists_ex_key$case=="High overlap"]
 g4 <- ggplot(dists_sim %>% filter(case=="High overlap"),
              aes(x=intake, y=density, color=country)) +
   geom_line(lwd=0.5) +
-  lims(x=c(0,750)) +
+  # lims(x=c(0,750)) +
   # Add % overlap label
   annotate(geom="text",
            x=dist_stats$xpos[dist_stats$case=="High overlap"],
@@ -195,7 +207,7 @@ g4 <- ggplot(dists_sim %>% filter(case=="High overlap"),
   geom_vline(xintercept=dist_stats$ear[dist_stats$case=="High overlap"], linetype="solid", lwd=0.4) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
-       title="High overlap", subtitle="Vitamin C for 50-54-yr-old men", tag="D") +
+       title="High overlap", subtitle=title, tag="D") +
   # Theme
   theme_bw() + subpanel_theme
 g4
@@ -209,7 +221,8 @@ g <- gridExtra::grid.arrange(g1, g2, g3, g4,
 
 
 # Export plot
-ggsave(g, filename=file.path(plotdir, "Fig3_similarity_across_countries.png"),
+figtitle <- paste0("Fig3_similarity_across_countries_", ncountries_req, ".png")
+ggsave(g, filename=file.path(plotdir, figtitle),
        width=6.5, height=5, units="in", dpi=600)
 
 

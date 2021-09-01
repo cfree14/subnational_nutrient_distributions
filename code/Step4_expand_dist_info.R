@@ -143,6 +143,12 @@ data %>%
   unique() %>%
   filter(nutrient_units!=ear_units)
 
+# Check SEV performance
+check <- data %>%
+  filter(iso3=="BFA" & nutrient=="Calcium" & sex=="Females" & age_group=="20-24")
+check$sev
+sev(ear=check$ear, cv=check$ear_cv, shape =check$g_shape, rate=check$g_rate, plot=T)
+
 
 # Export data
 ################################################################################

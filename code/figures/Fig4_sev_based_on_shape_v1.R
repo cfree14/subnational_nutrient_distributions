@@ -16,7 +16,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_22countries_expanded.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds"))
 
 # Format data
 data <- data_orig %>%
@@ -122,6 +122,6 @@ g <- gridExtra::grid.arrange(g1, g2, nrow=1)
 
 
 # Export
-ggsave(g, filename=file.path(plotdir, "Fig4_sev_based_on shape.png"),
+ggsave(g, filename=file.path(plotdir, "Fig4_sev_based_on shape_v1.png"),
        width=6.5, height=3, units="in", dpi=600)
 
