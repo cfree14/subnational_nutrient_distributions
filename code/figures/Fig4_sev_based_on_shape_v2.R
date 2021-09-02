@@ -102,10 +102,10 @@ g2 <- ggplot(data, aes(y=cutpoint_sev, x=sev, fill=pmin(skew,3))) +
   # Horizontal line
   geom_abline(slope=1) +
   # Label sides
-  annotate(geom="text", x=100, y=5, hjust=1, label="Cutpoint method underestimates\nprevalence of inadequate intakes", size=2.2) +
-  annotate(geom="text", x=10, y=95, hjust=0, label="Cutpoint method overestimates\nprevalence of inadequate intakes", size=2.2) +
+  annotate(geom="text", x=100, y=5, hjust=1, label="Cut-point method underestimates\nprevalence of inadequate intakes", size=2.2) +
+  annotate(geom="text", x=10, y=95, hjust=0, label="Cut-point method overestimates\nprevalence of inadequate intakes", size=2.2) +
   # Labels
-  labs(y="% inaqequate intake (SEV)\nestimated using the cutpoint method",
+  labs(y="% inaqequate intake (SEV)\nestimated using the cut-point method",
        x="% inadequate intake (SEV)\nestimated using the probability method",
        tag="B") +
   # Legend

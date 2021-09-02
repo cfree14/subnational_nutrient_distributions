@@ -31,7 +31,10 @@ data <- data_orig %>%
   mutate(cutpoint_sev=100*cutpoint_sev) %>%
   # Calculate difference
   mutate(sev_diff=cutpoint_sev-sev,
-         meandivear=mu/ear)
+         meandivear=mu/ear,
+         meandivear_cap=pmin(5, meandivear)) %>%
+  # Add some categories
+  mutate(meandivear_catg=ifelse(meandivear>=1, "above", "below"))
 
 # Build data for raster
 data2 <- data_orig %>%
@@ -147,16 +150,16 @@ g2 <- ggplot(data, aes(x=pmin(mu/ear, 5), y=sev, fill=pmin(cv,1))) +
 g2
 
 # SEV probability method compared to cutpoint method
-g3 <- ggplot(data, aes(y=cutpoint_sev, x=sev, fill=pmin(skew,3))) +
-  geom_point(pch=21, size=1, stroke=0.1) +
+g3 <- ggplot(data, aes(x=sev, y=cutpoint_sev, fill=pmin(skew,3))) + #, size=meandivear_cap)) +
+  geom_point(pch=21, stroke=0.1, size=1) + # size=1
   # Horizontal line
   geom_abline(slope=1) +
   # Label sides
-  annotate(geom="text", x=100, y=5, hjust=1, label="Cutpoint method underestimates\nprevalence of inadequate intakes", size=2.2) +
-  annotate(geom="text", x=10, y=95, hjust=0, label="Cutpoint method overestimates\nprevalence of inadequate intakes", size=2.2) +
+  annotate(geom="text", x=100, y=5, hjust=1, label="Cut-point method underestimates\nprevalence of inadequate intakes", size=2.2) +
+  annotate(geom="text", x=0, y=95, hjust=0, label="Cut-point method overestimates\nprevalence of inadequate intakes", size=2.2) +
   # Labels
-  labs(y="% inaqequate intake (SEV)\nestimated using the cutpoint method",
-       x="% inadequate intake (SEV)\nestimated using the probability method",
+  labs(x="% inadequate intake (SEV)\nestimated using the probability method",
+       y="% inaqequate intake (SEV)\nestimated using the cut-point method",
        tag="C") +
   # Legend
   scale_fill_gradientn(name=" \nSkewness",
@@ -165,6 +168,7 @@ g3 <- ggplot(data, aes(y=cutpoint_sev, x=sev, fill=pmin(skew,3))) +
                        labels=c(seq(0,2,1), "≥3"),
                        lim=c(0,3)) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
+  # scale_size_continuous(name="Mean/EAR", breaks = seq(0.5, 1, 2, 5))
   # Theme
   theme_bw() + base_theme +
   theme(legend.position = "right",
