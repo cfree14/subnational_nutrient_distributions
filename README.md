@@ -9,11 +9,11 @@ Passarelli S, Free CM, Batis Reuvalcaba C, Beal T, Berger N, Biltoft-Jensen AP, 
 
 The repository is organized using the following structure:
 
-- data............. folder containing intake distributions and other key data
+- data.............. folder containing intake distributions and other key data
 - code............. folder containing code to fit, describe, and compare intake distributions
 - figures.......... folder containing figures for the manuscript
 - tables........... folder containing tables for the manuscript
-- shiny_app..... folder containing data and code for the "nutriR" R Shiny web application
+- shiny_app.... folder containing data and code for the "nutriR" R Shiny web application
 
 Please email Simone Passarelli (spassarelli@g.harvard.edu) if you have any questions about the paper and Chris Free (cfree14@gmail.com) if you have any questions about using the data, code, and/or repository.
 
