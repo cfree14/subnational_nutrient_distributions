@@ -10,7 +10,7 @@ rm(list = ls())
 library(tidyverse)
 
 # Directories
-inputdir <- "data/dris/raw"
+inputdir <- "data/dris/raw/allen_etal_2020"
 outputdir <- "data/dris/processed"
 
 # Read ULs
@@ -65,7 +65,7 @@ table(ars$age_group)
 table(ars$nutrient)
 
 
-# Format ULss
+# Format ULs
 ################################################################################
 
 # Extract meta-data
@@ -114,7 +114,16 @@ table(uls$nutrient)
 ################################################################################
 
 # Merge
-data <- bind_rows(ars, uls)
+data <- bind_rows(ars, uls) %>%
+  # Recode a few nutrients
+  mutate(nutrient=recode(nutrient,
+                         "Iron (low)"="Iron (low absorption)",
+                         "Iron (moderate)"="Iron (moderate absorption)",
+                         "Iron (high)"="Iron (high absorption)",
+                         "Zinc (refined)"="Zinc (refined diet)",
+                         "Zinc (semi-refined)"="Zinc (semi-refined diet)",
+                         "Zinc (semi-unrefined)"="Zinc (semi-unrefined diet)",
+                         "Zinc (unrefined)"="Zinc (unrefined diet)"))
 
 # Inspect
 str(data)

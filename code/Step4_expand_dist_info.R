@@ -28,6 +28,42 @@ data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countri
 # DRIs
 dris <- nutriR::dris
 
+# NRVs
+nrvs <- nutriR::nrvs
+
+# Get ARs
+ars <- nrvs  %>%
+  # Reduce to ARs
+  filter(grepl("Average requirement", nrv_type) & !is.na(nrv)) %>%
+  # Simplify
+  select(nutrient, units, sex, age_group, stage, nrv) %>%
+  rename(ar=nrv, ar_units=units) %>%
+  # Spread
+  spread(key="stage", value="ar") %>%
+  # Format AR
+  mutate(ar=pmin(Infants, Children, Males, Females, na.rm=T)) %>%
+  select(-c(Infants, Children, Males, Females)) %>%
+  rename(ar_lact=Lactation,
+         ar_preg=Pregnancy) %>%
+  # Arrange
+  select(nutrient, sex, age_group, ar_units, ar, ar_lact, ar_preg) %>%
+  # Recode nutrient names to match intake distributions
+  mutate(nutrient=recode(nutrient,
+                         "Thiamin"="Thiamine",
+                         "Vitamin A"="Vitamin A (RAE)",
+                         "Vitamin B-12"="Vitamin B12",
+                         "Vitamin B-6"="Vitamin B6")) %>%
+  # Recode EAR units to match intake distributions
+  # Confirm with Simone that folate is in ug DFE and that Vitamin E is in a-tocopherol
+  mutate(ar_units=recode(ar_units, "ug"="mcg", "ug RAE"="mcg", "ug DFE"="mcg", "mg a-tocopherol"="mg")) %>%
+  # Format age groups (to match data)
+  mutate(age_group=gsub("y", "yr", age_group))
+
+# Inspect
+ar_nutr <- sort(unique(ars$nutrient))
+ar_nutr[!ar_nutr %in% sort(unique(data_orig$nutrient))] # "Fluoride", "Molybdenum", "Phosphorus" aren't in our data
+sort(unique(ars$ar_units))
+
 # Get EARs
 ears <- dris %>%
   # Reduce to EARs
@@ -67,6 +103,12 @@ ear_nutr[!ear_nutr %in% sort(unique(data_orig$nutrient))] # "Molybdenum" "Phosph
 
 ear_units <- sort(unique(ears$ear_units))
 ear_units[!ear_units %in% sort(unique(data_orig$nutrient_units))] # "Molybdenum" "Phosphorus" aren't in our data
+
+# EARs not in ARs
+ear_nutr[!ear_nutr %in% ar_nutr] # EARs give carbohydrates
+
+# ARs not in EARS
+ar_nutr[!ar_nutr %in% ear_nutr] # ARs give biotin, choline, chromium, manganese, pantothenic acid
 
 
 # Build data
@@ -119,10 +161,36 @@ data <- data_orig %>%
   # Set EAR CV
   mutate(ear_cv=ifelse(nutrient=="Vitamin B12", 0.25, 0.1),
          ear_cv=ifelse(is.na(ear), NA, ear_cv)) %>%
+  # Add ARs
+  # 1-3, 4-6, 7-10, 11-14, 15-17, 18-24, 25-50, 51-70, >70
+  # (<18, 19-30, 31-50 for lactating/pregnancy)
+  mutate(age_group_ar=recode(age_group,
+                             "0-4"="1-3 yr",
+                             "5-9"="7-10 yr",
+                             "10-14"="11-14 yr",
+                             "15-19"="15-17 yr",
+                             "20-24"="18-24 yr",
+                             "25-29"="25-50 yr",
+                             "30-34"="25-50 yr",
+                             "35-39"="25-50 yr",
+                             "40-44"="25-50 yr",
+                             "45-49"="25-50 yr",
+                             "50-54"="51-70 yr",
+                             "55-59"="51-70 yr",
+                             "60-64"="51-70 yr",
+                             "65-69"="51-70 yr",
+                             "70-74"=">70 yr",
+                             "75-79"=">70 yr",
+                             "80-84"=">70 yr",
+                             "85-89"=">70 yr",
+                             "90-94"=">70 yr",
+                             "95-99"=">70 yr"),
+         sex_ar=ifelse(age_group_ar %in% c("1-3 yr", "4-6 yr", "7-10 yr"), "Children", sex)) %>%
+  left_join(ars, by=c("nutrient"="nutrient", "age_group_ar"="age_group", "sex_ar"="sex")) %>%
   # Calculate SEV
-  mutate(g_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], shape=g_shape[i], rate=g_rate[i], plot=F)),
-         ln_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], meanlog=ln_meanlog[i], sdlog=ln_sdlog[i], plot=F))) %>%
-  mutate(sev=ifelse(best_dist=="gamma", g_sev, ln_sev)) %>%
+  # mutate(g_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], shape=g_shape[i], rate=g_rate[i], plot=F)),
+  #        ln_sev=sapply(1:nrow(.), function(i)  nutriR::sev(ear=ear[i], cv=ear_cv[i], meanlog=ln_meanlog[i], sdlog=ln_sdlog[i], plot=F))) %>%
+  # mutate(sev=ifelse(best_dist=="gamma", g_sev, ln_sev)) %>%
   # Calculate SEV using cutpoint method
   rowwise() %>%
   mutate(cutpoint_sev=nutriR::cutpoint(ear = ear, intake_avg = mu, intake_cv = cv)) %>%
@@ -131,13 +199,23 @@ data <- data_orig %>%
   dplyr::select(country:age_group,
                 sex_ear, age_group_ear,
                 ear_units, ear_cv, ear, ear_lact, ear_preg,
-                g_shape:g_ks, g_mu:g_kurt, g_sev, ln_meanlog:ln_ks, ln_mu:ln_kurt, ln_sev, best_dist, everything())
+                sex_ar, age_group_ar,
+                ar_units, ar,
+                g_shape:g_ks, g_mu:g_kurt, #g_sev,
+                ln_meanlog:ln_ks, ln_mu:ln_kurt, #ln_sev,
+                best_dist, everything())
 
 # Inspect
 freeR::complete(data)
 sum(data$nutrient_units!=data$ear_units, na.rm=T)
 
 # Confirm that EAR units are intake units
+data %>%
+  dplyr::select(nutrient, nutrient_units, ear_units) %>%
+  unique() %>%
+  filter(nutrient_units!=ear_units)
+
+# Confirm that AR units are intake units
 data %>%
   dplyr::select(nutrient, nutrient_units, ear_units) %>%
   unique() %>%
