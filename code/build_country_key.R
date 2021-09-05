@@ -73,10 +73,10 @@ cntry_key <- data_orig %>%
   left_join(hdi) %>%
   # Add iron category
   mutate(iron_type=recode(hdi_catg,
-                          "Low"="Low absorption",
-                          "Medium"="Moderate absorption",
-                          "High"="High absorption",
-                          "Very high"="High absorption")) %>%
+                          "Low"="Low",
+                          "Medium"="Moderate",
+                          "High"="High",
+                          "Very high"="High")) %>%
   # Add zinc category
   mutate(zinc_type=recode(hdi_catg,
                         "Low"="Unrefined",

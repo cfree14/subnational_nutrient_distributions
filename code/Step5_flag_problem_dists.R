@@ -156,50 +156,54 @@ cv_hi_labels <- data_cv_hi_sim %>%
   # Factor
   mutate(dist_id=factor(dist_id, levels=dist_id))
 
-# Factor
-data_cv_hi_sim <- data_cv_hi_sim %>%
-  mutate(dist_id=factor(dist_id, levels=cv_hi_labels$dist_id))
+# If
+if(F){
 
-# Theme
-theme2 <-  theme(axis.text=element_text(size=5),
-                 axis.title=element_text(size=7),
-                 strip.text=element_text(size=6),
-                 # Gridlines
-                 panel.grid.major = element_blank(),
-                 panel.grid.minor = element_blank(),
-                 panel.background = element_blank(),
-                 axis.line = element_line(colour = "black"),
-                 # Legend
-                 legend.position = "bottom")
+  # Factor
+  data_cv_hi_sim <- data_cv_hi_sim %>%
+    mutate(dist_id=factor(dist_id, levels=cv_hi_labels$dist_id))
 
-# Plot
-g2 <- ggplot(data_cv_hi_sim, aes(x=intake, y=density, color=cv)) +
-  # Paginate
-  ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=1) +
-  # Plot lines
-  geom_line() +
-  # CV value
-  geom_text(data=cv_hi_labels, mapping=aes(x=0, y=density, label=cv_label), hjust=0, vjust=1, size=2.3, color="black", inherit.aes=F) +
-  # Labels
-  labs(x="Habitual intake", y="Density") +
-  # Legend
-  scale_color_gradientn("Coefficient of variation (CV)", colors=RColorBrewer::brewer.pal(9, "YlOrRd")[3:9]) +
-  guides(color = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
-  theme_bw() + theme2
-g2
+  theme2 <-  theme(axis.text=element_text(size=5),
+                   axis.title=element_text(size=7),
+                   strip.text=element_text(size=6),
+                   # Gridlines
+                   panel.grid.major = element_blank(),
+                   panel.grid.minor = element_blank(),
+                   panel.background = element_blank(),
+                   axis.line = element_line(colour = "black"),
+                   # Legend
+                   legend.position = "bottom")
 
-# Number of pages
-npages <- ggforce::n_pages(g2)
+  # Plot
+  g2 <- ggplot(data_cv_hi_sim, aes(x=intake, y=density, color=cv)) +
+    # Paginate
+    ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=1) +
+    # Plot lines
+    geom_line() +
+    # CV value
+    geom_text(data=cv_hi_labels, mapping=aes(x=0, y=density, label=cv_label), hjust=0, vjust=1, size=2.3, color="black", inherit.aes=F) +
+    # Labels
+    labs(x="Habitual intake", y="Density") +
+    # Legend
+    scale_color_gradientn("Coefficient of variation (CV)", colors=RColorBrewer::brewer.pal(9, "YlOrRd")[3:9]) +
+    guides(color = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
+    # Theme
+    theme_bw() + theme2
+  g2
 
-# Loop through pages
-plotname <- "AppendixB_cv_problems_high.pdf"
-pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
-for(i in 1:npages){
-  print(g2 + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
+  # Number of pages
+  npages <- ggforce::n_pages(g2)
+
+  # Loop through pages
+  plotname <- "AppendixB_cv_problems_high.pdf"
+  pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
+  for(i in 1:npages){
+    print(g2 + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
+  }
+  dev.off()
+
 }
-dev.off()
-
 
 # Finalize CV cutoff
 ################################################################################

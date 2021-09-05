@@ -30,6 +30,11 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
     group_by(sex, age_group) %>%
     summarize(ear=median(ear))
 
+  # Calculate ULs
+  uls <- sdata %>%
+    group_by(sex, age_group) %>%
+    summarize(ul=median(ul_h))
+
   # Nutrient units
   nutrient_units <- sdata$nutrient_units %>% unique()
 
@@ -67,6 +72,8 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
     geom_line() +
     # Plot EAR
     geom_vline(data=ears %>% filter(sex=="Males"), mapping=aes(xintercept=ear, linetype=sex), show.legend=F) +
+    # Plot UL
+    geom_vline(data=uls %>% filter(sex=="Males"), mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F) +
     # Plot overlap text
     geom_text(data=overlaps_plot %>% filter(sex=="Males"),
               mapping=aes(x=intake_max, y=density_max, label=overlap_label),
@@ -91,6 +98,8 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
               inherit.aes=F, size=4, hjust=1.1, vjust=1.1) +
     # Plot EAR
     geom_vline(data=ears %>% filter(sex=="Females"), mapping=aes(xintercept=ear, linetype=sex), show.legend=F) +
+    # Plot UL
+    geom_vline(data=uls %>% filter(sex=="Females"), mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F) +
     # Labels
     labs(x=x_label, y="Density", title="Females", subtitle = paste("Habitual intake distribution for:", nutrient_do)) +
     # Legend

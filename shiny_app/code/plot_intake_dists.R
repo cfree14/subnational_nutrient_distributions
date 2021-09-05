@@ -36,13 +36,20 @@ plot_intake_dists <- function(data, nutrient, scales="Fixed", base_theme){
     group_by(sex) %>%
     summarize(ear=median(ear))
 
+  # Calculate ULs
+  uls <- sdata %>%
+    group_by(sex) %>%
+    summarize(ul=median(ul_h))
+
   # Plot data
   x_label <- paste0("Habitual intake (", nutrient_units, ")")
   g <- ggplot(sdata_sim, aes(x=intake, y=density, color=age_group, linetype=sex)) +
     facet_wrap(~country, scales=scales_use, drop = F, ncol=4) +
     geom_line() +
     # Plot EAR
-    geom_vline(data=ears, mapping=aes(xintercept=ear, linetype=sex), show.legend=F) +
+    geom_vline(data=ears, mapping=aes(xintercept=ear, linetype=sex), color="black", show.legend=F) +
+    # Plot UL
+    geom_vline(data=uls, mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F) +
     # Labels
     labs(x=x_label, y="Density", title=paste("Habitual intake distributions for:", nutrient_do)) +
     # Legend

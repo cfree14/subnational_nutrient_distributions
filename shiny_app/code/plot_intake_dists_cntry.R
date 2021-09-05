@@ -26,12 +26,19 @@ plot_intake_dists_cntry <- function(data, country, base_theme){
     group_by(nutrient, sex) %>%
     summarize(ear=median(ear))
 
+  # Calculate ULs
+  uls <- sdata %>%
+    group_by(nutrient, sex) %>%
+    summarize(ul=median(ul_h))
+
   # Plot data
   g <- ggplot(sdata_sim, aes(x=intake, y=density, color=age_group, linetype=sex)) +
     facet_wrap(~nutrient, scales="free", drop = F, ncol=4) +
     geom_line() +
     # Plot EAR
     geom_vline(data=ears, mapping=aes(xintercept=ear, linetype=sex), show.legend=F) +
+    # Plot UL
+    geom_vline(data=uls, mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F) +
     # Labels
     labs(x="Habitual intake", y="Density", title=paste("Habitual intake distributions for:", country_do)) +
     # Legend

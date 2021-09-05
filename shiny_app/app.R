@@ -103,7 +103,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
 
      # Illustrate distributions
      h3("Subnational habitual intake distributions"),
-     p("The figure below illustrates habitual intake distributions by sex and age group within each country. The vertical lines indicate the median EARs for men and women across availbale age groups (if an EAR is available)."),
+     p("The figure below illustrates habitual intake distributions by sex and age group within each country. The vertical black lines indicate the median EARs for men and women across availbale age groups (if an EAR is available). The vertical red lines indicate the median ULs for men and women across availbale age groups (if a UL is available)."),
      radioButtons(inputId = "scales1", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
      plotOutput(outputId = "plot_intake_dists", width=800, height=1000),
      br(),

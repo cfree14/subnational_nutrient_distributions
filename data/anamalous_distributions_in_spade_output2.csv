@@ -1,14 +1,12 @@
 "country","nutrient","sex","mu_div_ear","mu_div_ear_cap"
 "Bangladesh","Carbohydrates","Females",3.38596214086472,3.38596214086472
-"Belgium","Selenium","Females",899.900883126633,5
-"Belgium","Selenium","Males",1250.83952283779,5
-"Bulgaria","Copper","Females",3.37027531210717,3.37027531210717
-"Bulgaria","Copper","Males",3.49424304405279,3.49424304405279
-"Bulgaria","Iodine","Females",137.50776135172,5
+"Bulgaria","Copper","Females",3.34387608911661,3.34387608911661
+"Bulgaria","Copper","Males",3.45386181536638,3.45386181536638
+"Bulgaria","Iodine","Females",137.507761124059,5
 "Bulgaria","Iodine","Males",21.5453506691872,5
 "Bulgaria","Niacin","Females",3.4338738183547,3.4338738183547
 "Bulgaria","Niacin","Males",3.56756695270327,3.56756695270327
-"Bulgaria","Selenium","Females",18.751275728544,5
+"Bulgaria","Selenium","Females",16.063997011398,5
 "Bulgaria","Selenium","Males",21.4693249416427,5
 "Bulgaria","Vitamin A (RAE)","Children",3.00410801109078,3.00410801109078
 "Bulgaria","Vitamin A (RAE)","Females",3.05795700976443,3.05795700976443
@@ -34,13 +32,7 @@
 "Italy","Vitamin B12","Males",3.11207866661424,3.11207866661424
 "Kenya","Vitamin C","Males",3.82483705459362,3.82483705459362
 "Laos","Carbohydrates","Males",3.1602367234441,3.1602367234441
-"Mexico","Selenium","Females",1512.51201498714,5
-"Mexico","Selenium","Males",2168.58595891735,5
 "Philippines","Carbohydrates","Females",3.17209554345687,3.17209554345687
-"Romania","Selenium","Females",2207.43684595527,5
-"Romania","Selenium","Males",2687.25472890231,5
-"Sweden","Selenium","Females",927.738551486033,5
-"Sweden","Selenium","Males",1070.06474337236,5
 "Uganda","Carbohydrates","Females",4.53968744458862,4.53968744458862
 "United States","Vitamin B12","Males",3.28259056621299,3.28259056621299
 "Zambia","Carbohydrates","Females",3.80655617191696,3.80655617191696
