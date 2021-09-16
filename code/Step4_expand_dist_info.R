@@ -291,12 +291,14 @@ data <- data_orig %>%
   ungroup() %>%
   mutate(sev_ear=ifelse(best_dist=="gamma", g_sev_ear, ln_sev_ear),
          sev_ar=ifelse(best_dist=="gamma", g_sev_ar, ln_sev_ar)) %>%
-  # Select best SEV
-  mutate(sev=ifelse(nutrient=="Carbohydrates", sev_ear, sev_ar)) %>%
+  # Select best AR and best SEV
+  mutate(ear_use=ifelse(nutrient=="Carbohydrates", ear, ar),
+         sev=ifelse(nutrient=="Carbohydrates", sev_ear, sev_ar)) %>%
   # Calculate SEVs using cutpoint method
   rowwise() %>%
   mutate(cutpoint_sev_ear=nutriR::cutpoint(ear = ear, intake_avg = mu, intake_cv = cv),
-         cutpoint_sev_ar=nutriR::cutpoint(ear = ar, intake_avg = mu, intake_cv = cv)) %>%
+         cutpoint_sev_ar=nutriR::cutpoint(ear = ar, intake_avg = mu, intake_cv = cv),
+         cutpoint_sev=ifelse(nutrient=="Carbohydrates", cutpoint_sev_ear, cutpoint_sev_ar)) %>%
   ungroup() %>%
   # Arrange
   dplyr::select(continent, country, iso3,

@@ -12,7 +12,8 @@ library(countrycode)
 library(fitdistrplus)
 
 # Directories
-inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
+# inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
+inputdir <- "~/Desktop/subnational-distributions-extended-data/all_intakes" # one time only
 datadir <- "data"
 outdir <- "data/temp"
 plotdir <- "figures"
@@ -28,7 +29,7 @@ nutr_key <- readxl::read_excel(file.path(datadir, "SPADE_nutrient_key.xlsx"))
 ################################################################################
 
 # Fit distributions
-country <- "Bangladesh"
+country <- "Belgium"
 fit_dists <- function(country){
 
   # Country

@@ -8,18 +8,18 @@
 "Bulgaria","Niacin","Males",3.56756695270327,3.56756695270327
 "Bulgaria","Selenium","Females",16.063997011398,5
 "Bulgaria","Selenium","Males",21.4693249416427,5
-"Bulgaria","Vitamin A (RAE)","Children",3.00410801109078,3.00410801109078
-"Bulgaria","Vitamin A (RAE)","Females",3.05795700976443,3.05795700976443
-"Bulgaria","Vitamin A (RAE)","Males",3.10749152753058,3.10749152753058
+"Bulgaria","Vitamin A (RAE)","Children",3.07737893819055,3.07737893819055
+"Bulgaria","Vitamin A (RAE)","Females",3.13254132707575,3.13254132707575
+"Bulgaria","Vitamin A (RAE)","Males",3.18328400381181,3.18328400381181
 "Bulgaria","Vitamin B12","Females",3.27866224435225,3.27866224435225
 "Bulgaria","Vitamin B12","Males",3.38947878793476,3.38947878793476
-"Bulgaria","Vitamin C","Females",6.04010849024293,5
-"Bulgaria","Vitamin C","Males",6.62643345125668,5
-"Burkina Faso","Iron","Children",9.39843468833746,5
-"Burkina Faso","Iron","Females",5.37751023385539,5
-"Burkina Faso","Zinc","Children",4.96198702042836,4.96198702042836
+"Bulgaria","Vitamin C","Females",5.23476069154387,5
+"Bulgaria","Vitamin C","Males",5.74290899108912,5
 "Canada","Niacin","Males",3.74889262987179,3.74889262987179
+"China","Iron","Females",3.1551691540557,3.1551691540557
 "China","Iron","Males",4.0386096811263,4.0386096811263
+"Denmark","Chromium","Females",1734069.5852246,5
+"Denmark","Chromium","Males",1621611.63903768,5
 "Denmark","Copper","Females",6.14641220297698,5
 "Denmark","Copper","Males",5.47965322867327,5
 "Denmark","Iodine","Females",2163.55159342612,5
@@ -28,9 +28,8 @@
 "Denmark","Vitamin B12","Males",4.00765547835934,4.00765547835934
 "Estonia","Vitamin B12","Males",3.61404560986358,3.61404560986358
 "Ethiopia","Carbohydrates","Females",3.06453595742501,3.06453595742501
-"Ethiopia","Iron","Females",3.86026002423831,3.86026002423831
 "Italy","Vitamin B12","Males",3.11207866661424,3.11207866661424
-"Kenya","Vitamin C","Males",3.82483705459362,3.82483705459362
+"Kenya","Vitamin C","Males",3.31485878064781,3.31485878064781
 "Laos","Carbohydrates","Males",3.1602367234441,3.1602367234441
 "Philippines","Carbohydrates","Females",3.17209554345687,3.17209554345687
 "Uganda","Carbohydrates","Females",4.53968744458862,4.53968744458862

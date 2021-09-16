@@ -314,9 +314,9 @@ cap <- 5
 # Build data
 data2 <- data_orig %>%
   # Only nutrients with EAR
-  filter(!is.na(ear)) %>%
+  filter(!is.na(ear_use)) %>%
   # Calculate mean relative to EAR
-  mutate(mu_div_ear=mu/ear) %>%
+  mutate(mu_div_ear=mu/ear_use) %>%
   # Caluclate median (across age groups) of mean relative to EAR for nutrient-country-sex
   group_by(country, nutrient, sex) %>%
   summarize(mu_div_ear=median(mu_div_ear),
