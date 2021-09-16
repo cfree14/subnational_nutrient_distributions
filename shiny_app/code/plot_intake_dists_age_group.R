@@ -1,7 +1,7 @@
 
 # Plot coverage
-# data <- dists_full; nutrient <- "Calcium"; scales="Fixed"
-plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_theme){
+# data <- dists_full; nutrient <- "Calcium"; scales="Fixed"; ul_yn <- "No"
+plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, ul_yn, base_theme){
 
   # Nutrient
   nutrient_do <- nutrient
@@ -72,8 +72,6 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
     geom_line() +
     # Plot EAR
     geom_vline(data=ears %>% filter(sex=="Males"), mapping=aes(xintercept=ear, linetype=sex), show.legend=F) +
-    # Plot UL
-    geom_vline(data=uls %>% filter(sex=="Males"), mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F) +
     # Plot overlap text
     geom_text(data=overlaps_plot %>% filter(sex=="Males"),
               mapping=aes(x=intake_max, y=density_max, label=overlap_label),
@@ -85,7 +83,10 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
     # Theme
     theme_bw() + base_theme +
     theme(legend.position="right",
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    # Plot UL
+    if(ul_yn=="Yes"){geom_vline(data=uls %>% filter(sex=="Males"),
+                                mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F)}
   g1
 
   # Plot data
@@ -98,8 +99,6 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
               inherit.aes=F, size=4, hjust=1.1, vjust=1.1) +
     # Plot EAR
     geom_vline(data=ears %>% filter(sex=="Females"), mapping=aes(xintercept=ear, linetype=sex), show.legend=F) +
-    # Plot UL
-    geom_vline(data=uls %>% filter(sex=="Females"), mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F) +
     # Labels
     labs(x=x_label, y="Density", title="Females", subtitle = paste("Habitual intake distribution for:", nutrient_do)) +
     # Legend
@@ -107,7 +106,10 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, base_t
     # Theme
     theme_bw() + base_theme +
     theme(legend.position="right",
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    # Plot UL
+    if(ul_yn=="Yes"){geom_vline(data=uls %>% filter(sex=="Females"),
+                                mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F)}
   g2
 
   # Merge

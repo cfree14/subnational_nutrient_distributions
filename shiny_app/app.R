@@ -105,6 +105,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      h3("Subnational habitual intake distributions"),
      p("The figure below illustrates habitual intake distributions by sex and age group within each country. The vertical black lines indicate the median EARs for men and women across availbale age groups (if an EAR is available). The vertical red lines indicate the median ULs for men and women across availbale age groups (if a UL is available)."),
      radioButtons(inputId = "scales1", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
+     radioButtons(inputId = "ul_yn1", label="Show upper limit (UL)?:", choices = c("Yes", "No"), selected = "Yes", inline=T),
      plotOutput(outputId = "plot_intake_dists", width=800, height=1000),
      br(),
 
@@ -112,6 +113,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      h3("Similarity in subnational habitual intake distributions across countries"),
      p("In the figure below, the similarity in habitual intake distributions across countries are compared within sex and age groups. The similarity is quantified as the mean percent overlap of all pairwise combinations of countries with available data. The percent overlap is calculated as the Bhattacharyya coefficient. The solid vertical lines indicate the EAR for the sex-age group, if an EAR is available."),
      radioButtons(inputId = "scales2", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
+     radioButtons(inputId = "ul_yn2", label="Show upper limit (UL)?:", choices = c("Yes", "No"), selected = "Yes", inline=T),
      plotOutput(outputId = "plot_intake_dists_age_group", width=1000, height=1200),
      br(),
 
@@ -119,6 +121,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      h3("Subnational habitual intake means"),
      p("The figure below illustrate the mean habitual intake for each country, sex, and age group compared to the Estimated Average Requirement (EAR), when available. The EAR is from the U.S. Food and Nutrition Board of the National Academy of Sciences."),
      radioButtons(inputId = "scales3", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
+     radioButtons(inputId = "ul_yn3", label="Show upper limit (UL)?:", choices = c("Yes", "No"), selected = "Yes", inline=T),
      plotOutput(outputId = "plot_intake_means", width=600, height=2000),
      br(),
 
@@ -147,6 +150,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      # Illustrate distribution
      h3("Habitual intake distributions"),
      p("The figure belows shows habitual intake distributions ny nutrient, sex, and age within the selected country. The vertical lines indicate the EAR, if available."),
+     radioButtons(inputId = "ul_yn4", label="Show upper limit (UL)?:", choices = c("Yes", "No"), selected = "Yes", inline=T),
      plotOutput(outputId = "plot_intake_dists_cntry", width=800, height=1600),
      br(),
 
@@ -166,6 +170,13 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      p("The figure below indicates the prevalence on inadequate nutrient intakes within the selected country by sex and age group."),
      plotOutput(outputId = "plot_inadequate_intakes_in_a_country", width=800, height=800),
      br(),
+
+     # Prevalence of inadequate intakes
+     h3("Prevalence of intakes over the upper limit"),
+     p("The figure below indicates the prevalence of intakes over the upper limit within the selected country by sex and age group."),
+     plotOutput(outputId = "plot_overage_intakes_in_a_country", width=800, height=400),
+     br()
+
   )
 
 )
@@ -193,6 +204,7 @@ server <- function(input, output, session){
     g <- plot_intake_dists(data = dists_full,
                            nutrient = input$nutrient,
                            scales = input$scales1,
+                           ul_yn = input$ul_yn1,
                            base_theme = base_theme)
     g
   })
@@ -203,6 +215,7 @@ server <- function(input, output, session){
                                      nutrient = input$nutrient,
                                      overlaps = overlaps,
                                      scales = input$scales2,
+                                     ul_yn = input$ul_yn2,
                                      base_theme = base_theme)
     g
   })
@@ -212,6 +225,7 @@ server <- function(input, output, session){
     g <- plot_intake_means(data = dists_full,
                            nutrient = input$nutrient,
                            scales = input$scales3,
+                           ul_yn = input$ul_yn3,
                            base_theme = base_theme)
     g
   })
@@ -246,6 +260,7 @@ server <- function(input, output, session){
   output$plot_intake_dists_cntry <- renderPlot({
     g <- plot_intake_dists_cntry(data = dists_full,
                                  country = input$country,
+                                 ul_yn = input$ul_yn4,
                                  base_theme = base_theme)
     g
   })
@@ -260,11 +275,19 @@ server <- function(input, output, session){
   #   g
   # })
 
-  # Plot inadequate intakes eithin a country
+  # Plot inadequate intakes within a country
   output$plot_inadequate_intakes_in_a_country <- renderPlot({
     g <- plot_inadequate_intakes_in_a_country(data = dists_full,
                                  country = input$country,
                                  base_theme = base_theme)
+    g
+  })
+
+  # Plot overage intakes within a country
+  output$plot_overage_intakes_in_a_country <- renderPlot({
+    g <- plot_overage_intakes_in_a_country(data = dists_full,
+                                           country = input$country,
+                                           base_theme = base_theme)
     g
   })
 

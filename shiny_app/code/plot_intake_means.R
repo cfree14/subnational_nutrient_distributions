@@ -1,7 +1,7 @@
 
 # Plot coverage
 # data <- dists_full; nutrient <- "Calcium"
-plot_intake_means <- function(data, nutrient, scales, base_theme){
+plot_intake_means <- function(data, nutrient, scales, ul_yn, base_theme){
 
   # Nutrient
   nutrient_do <- nutrient
@@ -9,7 +9,7 @@ plot_intake_means <- function(data, nutrient, scales, base_theme){
   # Parameters
   sexes <- data$sex %>% unique()
   age_groups <- data$age_group %>% unique()
-  countries <- data$country %>% unique()
+  countries <- data$country %>% unique() %>% sort()
 
   # X-axis scales
   if(scales=="Fixed"){
@@ -46,8 +46,6 @@ plot_intake_means <- function(data, nutrient, scales, base_theme){
     geom_bar(stat="identity", color="black", lwd=0.2) +
     # Plot EARs
     geom_line(data=ears, mapping=aes(x=age_group, y=ear, group=sex), inherit.aes=F) +
-    # Plot ULs
-    geom_line(data=uls, mapping=aes(x=age_group, y=ul, group=sex), color="red", inherit.aes=F) +
     # Labels
     labs(x="Age group", y=y_label, title=paste("Mean habitual intakes and EARs for:", nutrient_do)) +
     # Scales
@@ -61,7 +59,9 @@ plot_intake_means <- function(data, nutrient, scales, base_theme){
     # Theme
     theme_bw() + base_theme +
     theme(legend.position="bottom",
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    # Plot ULs
+    if(ul_yn=="Yes"){geom_line(data=uls, mapping=aes(x=age_group, y=ul, group=sex), color="red", inherit.aes=F)}
   g
 
 

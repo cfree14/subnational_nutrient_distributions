@@ -1,7 +1,7 @@
 
 # Plot coverage
 # data <- dists_full; country <- "United States"
-plot_intake_dists_cntry <- function(data, country, base_theme){
+plot_intake_dists_cntry <- function(data, country, ul_yn, base_theme){
 
   # Country
   country_do <- country
@@ -9,7 +9,7 @@ plot_intake_dists_cntry <- function(data, country, base_theme){
   # Parameters
   sexes <- data$sex %>% unique()
   age_groups <- data$age_group %>% unique()
-  nutrients <- data$nutrient %>% unique()
+  nutrients <- data$nutrient %>% unique() %>% sort()
 
   # Subset data
   sdata <- data %>%
@@ -37,8 +37,6 @@ plot_intake_dists_cntry <- function(data, country, base_theme){
     geom_line() +
     # Plot EAR
     geom_vline(data=ears, mapping=aes(xintercept=ear, linetype=sex), show.legend=F) +
-    # Plot UL
-    geom_vline(data=uls, mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F) +
     # Labels
     labs(x="Habitual intake", y="Density", title=paste("Habitual intake distributions for:", country_do)) +
     # Legend
@@ -47,7 +45,9 @@ plot_intake_dists_cntry <- function(data, country, base_theme){
     # Theme
     theme_bw() + base_theme +
     theme(legend.position="right",
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    # Plot UL
+    if(ul_yn=="Yes"){geom_vline(data=uls, mapping=aes(xintercept=ul, linetype=sex), color="red", show.legend=F)}
   g
 
 }

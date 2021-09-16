@@ -9,7 +9,7 @@ plot_inadequate_intakes <- function(data, nutrient, base_theme){
   # Parameters
   sexes <- data$sex %>% unique()
   age_groups <- data$age_group %>% unique()
-  countries <- data$country %>% unique()
+  countries <- data$country %>% unique() %>% sort()
 
   # Subset data
   sdata <- data %>%
