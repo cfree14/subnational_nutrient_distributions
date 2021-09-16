@@ -95,34 +95,38 @@ theme2 <-  theme(axis.text=element_text(size=5),
                  # Legend
                  legend.position = "bottom")
 
-# Plot lo CVs
-g <- ggplot(data_cv_lo_sim, aes(x=intake, y=density, color=cv)) +
-  # Paginate
-  ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol=5, nrow = 6, page=1) +
-  # Densities
-  geom_line() +
-  # CV value
-  geom_text(data=cv_lo_labels, mapping=aes(x=0, y=density, label=cv_label), hjust=0, vjust=1, size=2.3, color="black") +
-  # Labels
-  labs(x="Habitual intake", y="Density") +
-  # Legend
-  scale_color_gradientn("Coefficient of variation (CV)", colors=RColorBrewer::brewer.pal(9, "YlOrRd")[3:9]) +
-  guides(color = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
-  # Theme
-  theme_bw() + theme2
-g
+# If plotting
+if(F){
 
-# Number of pages
-npages <- ggforce::n_pages(g)
+  # Plot lo CVs
+  g <- ggplot(data_cv_lo_sim, aes(x=intake, y=density, color=cv)) +
+    # Paginate
+    ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol=5, nrow = 6, page=1) +
+    # Densities
+    geom_line() +
+    # CV value
+    geom_text(data=cv_lo_labels, mapping=aes(x=0, y=density, label=cv_label), hjust=0, vjust=1, size=2.3, color="black") +
+    # Labels
+    labs(x="Habitual intake", y="Density") +
+    # Legend
+    scale_color_gradientn("Coefficient of variation (CV)", colors=RColorBrewer::brewer.pal(9, "YlOrRd")[3:9]) +
+    guides(color = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
+    # Theme
+    theme_bw() + theme2
+  g
 
-# Loop through pages
-plotname <- "AppendixA_cv_problems_low.pdf"
-pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
-for(i in 1:npages){
-  print(g + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
+  # Number of pages
+  npages <- ggforce::n_pages(g)
+
+  # Loop through pages
+  plotname <- "AppendixA_cv_problems_low.pdf"
+  pdf(file.path(plotdir, plotname), paper= "letter", width = 7.5, height=11)
+  for(i in 1:npages){
+    print(g + ggforce::facet_wrap_paginate(~dist_id, scales="free", ncol = 5, nrow = 6, page=i))
+  }
+  dev.off()
+
 }
-dev.off()
-
 
 # Inspect high CV values
 ################################################################################
