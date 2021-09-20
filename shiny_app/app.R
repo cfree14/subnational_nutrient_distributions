@@ -1,6 +1,7 @@
 
 # Clear
 rm(list = ls())
+options(dplyr.summarise.inform=F)
 
 # Setup
 ################################################################################

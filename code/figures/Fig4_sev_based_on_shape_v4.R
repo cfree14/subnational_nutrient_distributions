@@ -31,7 +31,7 @@ data <- data_orig %>%
   mutate(cutpoint_sev=100*cutpoint_sev) %>%
   # Calculate difference
   mutate(sev_diff=cutpoint_sev-sev,
-         meandivear=mu/ear,
+         meandivear=mu/ear_use,
          meandivear_cap=pmin(5, meandivear)) %>%
   # Add some categories
   mutate(meandivear_catg=ifelse(meandivear>=1, "above", "below"))
@@ -126,7 +126,7 @@ g1 <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
 g1
 
 # SEV based on variability
-g2 <- ggplot(data, aes(x=pmin(mu/ear, 5), y=sev, fill=pmin(cv,1))) +
+g2 <- ggplot(data, aes(x=pmin(meandivear, 5), y=sev, fill=pmin(cv,1))) +
   geom_point(pch=21, size=1, stroke=0.1) +
   # Reference line
   geom_vline(xintercept=1, linetype="dashed") +
