@@ -20,7 +20,8 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")) %>%
+  filter(best_dist!="none" & status!="Not representative")
 
 
 # Format data

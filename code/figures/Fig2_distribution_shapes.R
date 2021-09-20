@@ -17,14 +17,14 @@ tabledir <- "tables"
 
 # Read data
 data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")) %>%
-  filter(status=="Fit")
+  filter(best_dist!="none" & status!="Not representative")
 
 
 # Build data
 ################################################################################
 
 # Number of countries required to be included
-ncountries_req <- 5
+ncountries_req <- 3
 
 # Set sort order
 key <- data_orig %>%
@@ -50,9 +50,10 @@ data <- data_orig %>%
   # Simplify
   dplyr::select(country:age_group, best_dist, cv, skew) %>%
   # Gather
-  gather(key="metric", value="value", 9:10) %>%
+  gather(key="metric", value="value", 11:12) %>%
   # Aggregate some nutrient types
-  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar", "beta-Carotene"), "Other macronutrient", nutrient_type)) %>%
+  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar", "beta-Carotene", "alpha-Carotene", "beta-cryptoxanthin"),
+                              "Other macronutrient", nutrient_type)) %>%
   # Recode nutrient types
   mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
   # Recode metric names

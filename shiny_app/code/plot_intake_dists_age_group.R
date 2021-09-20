@@ -28,7 +28,7 @@ plot_intake_dists_age_group <- function(data, nutrient, overlaps, scales, ul_yn,
   # Calculate EARs
   ears <- sdata %>%
     group_by(sex, age_group) %>%
-    summarize(ear=median(ear))
+    summarize(ear=median(ear_use))
 
   # Calculate ULs
   uls <- sdata %>%

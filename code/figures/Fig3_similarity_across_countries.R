@@ -21,14 +21,14 @@ data_orig <- readRDS(file=file.path(datadir, "percent_overlap_among_country_pair
 
 # Read distribution data
 dists_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")) %>%
-  filter(status=="Fit")
+  filter(best_dist!="none" & status!="Not representative")
 
 
 # Build data
 ################################################################################
 
 # Number of countries required to be included
-ncountries_req <- 5
+ncountries_req <- 3
 
 # Sample size
 n_dists <- data_orig %>%
