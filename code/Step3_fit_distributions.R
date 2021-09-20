@@ -13,7 +13,7 @@ library(fitdistrplus)
 
 # Directories
 # inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
-inputdir <- "~/Desktop/subnational-distributions-extended-data/all_intakes" # one time only
+inputdir <- "~/Desktop/all_intakes" # one time only
 datadir <- "data"
 outdir <- "data/temp"
 plotdir <- "figures"

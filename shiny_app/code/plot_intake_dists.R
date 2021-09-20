@@ -1,6 +1,6 @@
 
 # Plot coverage
-# data <- dists_full; nutrient <- "Iron"; scales <- "Fixed"; ul_yn <- "No"
+# data <- dists_full; nutrient <- "Iron"; scales <- "Free"; ul_yn <- "Yes"
 plot_intake_dists <- function(data, nutrient, scales="Fixed", ul_yn, base_theme){
 
   # Nutrient
@@ -33,12 +33,14 @@ plot_intake_dists <- function(data, nutrient, scales="Fixed", ul_yn, base_theme)
 
   # Calculate EARs
   ears <- sdata %>%
-    group_by(sex) %>%
+    filter(!is.na(best_dist!="none")) %>%
+    group_by(country, sex) %>%
     summarize(ear=median(ear))
 
   # Calculate ULs
   uls <- sdata %>%
-    group_by(sex) %>%
+    filter(!is.na(best_dist!="none")) %>%
+    group_by(country, sex) %>%
     summarize(ul=median(ul_h))
 
   # Plot data

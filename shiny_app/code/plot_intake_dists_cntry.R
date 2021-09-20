@@ -23,11 +23,13 @@ plot_intake_dists_cntry <- function(data, country, ul_yn, base_theme){
 
   # Calculate EARs
   ears <- sdata %>%
+    filter(!is.na(best_dist!="none")) %>%
     group_by(nutrient, sex) %>%
     summarize(ear=median(ear))
 
   # Calculate ULs
   uls <- sdata %>%
+    filter(!is.na(best_dist!="none")) %>%
     group_by(nutrient, sex) %>%
     summarize(ul=median(ul_h))
 

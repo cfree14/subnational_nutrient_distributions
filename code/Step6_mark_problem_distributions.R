@@ -31,10 +31,10 @@ data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countri
 # Carbohydrates: Belgium
 # Omega-3 fatty acids: Denmark
 
-# Problem key
-prob_key <- tibble(nutrient=c(rep("Selenium", 4), "Iodine", "Carbohydrates", "Omega-3 fatty acids"),
-                   country=c("Belgium", "Mexico", "Romania", "Sweden", "Denmark", "Belgium", "Denmark"),
-                   problem="YES")
+# Example of how to build a problem key if necessary
+# prob_key <- tibble(nutrient=c(rep("Selenium", 4), "Iodine", "Carbohydrates", "Omega-3 fatty acids"),
+#                    country=c("Belgium", "Mexico", "Romania", "Sweden", "Denmark", "Belgium", "Denmark"),
+#                    problem="YES")
 
 # CV cutoff
 cv_lo_final <- 0.02
@@ -48,11 +48,11 @@ data <- data_orig %>%
                        "none"="Failed to fit"),
          status=ifelse(cv<cv_lo_final & !is.na(cv), "Not representative", status)) %>%
   # Mark problems
-  left_join(prob_key) %>%
-  mutate(status=ifelse(problem=="YES" & !is.na(problem), "Scale problem", status)) %>%
-  select(-problem) %>%
+  # left_join(prob_key) %>%
+  # mutate(status=ifelse(problem=="YES" & !is.na(problem), "Scale problem", status)) %>%
+  # select(-problem) %>%
   # Arrange
-  select(country:ln_sev, status, everything())
+  select(country:ln_sev_ar, status, everything())
 
 # Statuses
 table(data$status)
