@@ -109,13 +109,13 @@ base_theme <-  theme(axis.text=element_text(size=5),
 # SEV raster
 g1 <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
   facet_wrap(~sex, nrow=1) +
-  geom_tile() +
+  geom_tile(color="grey40", lwd=0.1) +
   # Labels
   labs(x="", y="", tag="A") +
   # Legend
   scale_fill_gradientn(name="Mean %\ninadequate intake",
                        colors=RColorBrewer::brewer.pal(9, "YlOrRd"),
-                       lim=c(0,100)) +
+                       lim=c(0,100), na.value = "grey90") +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
   theme_bw() + base_theme +

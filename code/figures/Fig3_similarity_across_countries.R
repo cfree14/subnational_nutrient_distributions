@@ -48,9 +48,17 @@ data <- data_orig %>%
 
 # Compute stats
 stats <- data %>%
+  # Recode some nutrients
+  mutate(nutrient=recode(nutrient,
+                         "beta-Carotene"="Beta-carotene",
+                         "alpha-Carotene"="Alpha-carotene",
+                         "beta-cryptoxanthin"="Beta-cryptoxanthin")) %>%
   # Aggregate some nutrient types
-  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar", "beta-Carotene"), "Other macronutrient", nutrient_type)) %>%
-  # Recode nutrient types
+  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar"),
+                              "Other macronutrient", nutrient_type),
+         nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
+                              "Vitamin", nutrient_type)) %>%
+# Recode nutrient types
   mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
   # Calculate median percent overlap
   group_by(nutrient_type, nutrient, sex, age) %>%

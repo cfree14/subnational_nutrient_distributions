@@ -30,6 +30,18 @@ ncountries_req <- 3
 key <- data_orig %>%
   # Remove children
   filter(sex!="Children") %>%
+  # Recode some nutrients
+  mutate(nutrient=recode(nutrient,
+                         "beta-Carotene"="Beta-carotene",
+                         "alpha-Carotene"="Alpha-carotene",
+                         "beta-cryptoxanthin"="Beta-cryptoxanthin")) %>%
+  # Aggregate some nutrient types
+  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar"),
+                              "Other macronutrient", nutrient_type),
+         nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
+                              "Vitamin", nutrient_type)) %>%
+  # Recode nutrient types
+  mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
   # Sample size and variability
   group_by(nutrient_type, nutrient) %>%
   summarize(n=n(),
@@ -45,15 +57,20 @@ key <- data_orig %>%
 data <- data_orig %>%
   # Remove children
   filter(sex!="Children") %>%
-  # Reduce to nutrients meeting data requirements
-  filter(nutrient %in% key$nutrient) %>%
   # Simplify
   dplyr::select(country:age_group, best_dist, cv, skew) %>%
   # Gather
   gather(key="metric", value="value", 11:12) %>%
+  # Recode some nutrients
+  mutate(nutrient=recode(nutrient,
+                         "beta-Carotene"="Beta-carotene",
+                         "alpha-Carotene"="Alpha-carotene",
+                         "beta-cryptoxanthin"="Beta-cryptoxanthin")) %>%
   # Aggregate some nutrient types
-  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar", "beta-Carotene", "alpha-Carotene", "beta-cryptoxanthin"),
-                              "Other macronutrient", nutrient_type)) %>%
+  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar"),
+                              "Other macronutrient", nutrient_type),
+         nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
+                              "Vitamin", nutrient_type)) %>%
   # Recode nutrient types
   mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
   # Recode metric names
@@ -64,7 +81,9 @@ data <- data_orig %>%
                     "Skewness"="5") %>% as.character() %>% as.numeric(),
          value_cap=pmin(value, cap)) %>%
   # Set order
-  mutate(nutrient=factor(nutrient, levels=key$nutrient))
+  mutate(nutrient=factor(nutrient, levels=key$nutrient)) %>%
+  # Reduce to nutrients meeting data requirements
+  filter(nutrient %in% key$nutrient)
 
 
 # Build distribution examples
