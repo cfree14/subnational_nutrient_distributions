@@ -76,7 +76,7 @@ df1 <- bind_rows(norm_df, lnorm_base_df, gamma_df) %>%
 ########################################
 
 # Base
-lnorm_cv_base_label <- gsub("Log-normal", "Medium variability", lnorm_base_label)
+lnorm_cv_base_label <- gsub("Log-normal", "Moderate variability", lnorm_base_label)
 lnorm_cv_base_df <- lnorm_base_df %>%
   mutate(dist=lnorm_cv_base_label)
 

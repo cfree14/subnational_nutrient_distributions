@@ -73,7 +73,7 @@ stats <- data %>%
 dists <- dists_orig %>%
   # Add cases
   mutate(case = case_when(nutrient == "Vitamin K" & sex=="Females" & age_group=="75-79" ~ "Low overlap",
-                          nutrient == "Calcium" & sex=="Females" & age_group=="20-24" ~ "Medium overlap",
+                          nutrient == "Calcium" & sex=="Females" & age_group=="20-24" ~ "Moderate overlap",
                           nutrient == "Magnesium" & sex=="Males" & age_group=="25-29" ~ "High overlap")) %>%
   # Filter
   filter(!is.na(case))
@@ -94,7 +94,7 @@ dist_stats <- dists %>%
   # Add xpos/ypos
   left_join(dists_sim %>% group_by(case) %>% summarize(ypos=max(density[is.finite(density)]), xpos=max(intake))) %>%
   mutate(xpos=case_when(case=="Low overlap" ~ xpos,
-                        case=="Medium overlap" ~ xpos,
+                        case=="Moderate overlap" ~ xpos,
                         case=="High overlap" ~ xpos))
 
 # Example dists key
@@ -107,7 +107,7 @@ dists_ex_key <- dists %>%
          title=paste0(nutrient, " intake for ", age_group, "-yr-old ", sex1)) %>%
   mutate(label=recode(case,
                       "Low overlap"="B",
-                      "Medium overlap"="C",
+                      "Moderate overlap"="C",
                       "High overlap"="D")) %>%
   rename(age=age_group)
 
@@ -179,22 +179,22 @@ g2 <- ggplot(dists_sim %>% filter(case=="Low overlap"),
   theme_bw() + subpanel_theme
 g2
 
-# Medium overlap
-title <- dists_ex_key$title[dists_ex_key$case=="Medium overlap"]
-g3 <- ggplot(dists_sim %>% filter(case=="Medium overlap"),
+# Moderate overlap
+title <- dists_ex_key$title[dists_ex_key$case=="Moderate overlap"]
+g3 <- ggplot(dists_sim %>% filter(case=="Moderate overlap"),
              aes(x=intake, y=density, color=country)) +
   geom_line(lwd=0.5) +
   # Add % overlap label
   annotate(geom="text",
-           x=dist_stats$xpos[dist_stats$case=="Medium overlap"],
-           y=dist_stats$ypos[dist_stats$case=="Medium overlap"],
-           label=dist_stats$poverlap_label[dist_stats$case=="Medium overlap"],
+           x=dist_stats$xpos[dist_stats$case=="Moderate overlap"],
+           y=dist_stats$ypos[dist_stats$case=="Moderate overlap"],
+           label=dist_stats$poverlap_label[dist_stats$case=="Moderate overlap"],
            size=1.8, hjust=1, vjust=1.5) +
   # Add EAR
-  geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Medium overlap"], linetype="solid", lwd=0.4) +
+  geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Moderate overlap"], linetype="solid", lwd=0.4) +
   # Labels
   labs(x="Habitual intake (mg)", y="Density",
-       title="Medium overlap", subtitle=title, tag="C") +
+       title="Moderate overlap", subtitle=title, tag="C") +
   # Theme
   theme_bw() + subpanel_theme
 g3
