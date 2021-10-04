@@ -66,7 +66,9 @@ data2_ordered <- data2 %>%
   mutate(iso3=factor(iso3, levels=cntry_key$iso3),
          nutrient=factor(nutrient, levels=nutrient_key$nutrient)) %>%
   # Add percentage labels
-  mutate(perc_label=paste0(round(sev), ""))
+  mutate(perc_label=paste0(round(sev), "")) %>%
+  # Add color label
+  mutate(text_color=ifelse(sev>=50, "white", "black"))
 
 
 # Build reference data
@@ -115,11 +117,15 @@ g1 <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
   geom_tile() +
   # geom_tile(color="grey40", lwd=0.1) +
   # Plot text
-  geom_text(data=data2_ordered, aes(x=iso3, y=nutrient, label=perc_label),
-            size=1.8, color="black") +
+  geom_text(data=data2_ordered, aes(x=iso3, y=nutrient, label=perc_label, color=text_color),
+            size=1.6, inherit.aes = F, show.legend = F) +
   # Labels
   labs(x="", y="", tag="A") +
-  # Legend
+  # Text legend
+  scale_color_gradient2(name="", midpoint=50,
+                        low="black", high="white", lim=c(0,100)) +
+  scale_color_manual(name="", values=c("black", "white")) +
+  # Fill legend
   scale_fill_gradientn(name="Mean %\ninadequate intake",
                        colors=RColorBrewer::brewer.pal(9, "YlOrRd"),
                        lim=c(0,100), na.value = "grey90") +
