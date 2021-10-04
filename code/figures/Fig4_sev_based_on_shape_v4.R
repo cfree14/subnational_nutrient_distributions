@@ -64,7 +64,9 @@ nutrient_key <- data2 %>%
 # Order data
 data2_ordered <- data2 %>%
   mutate(iso3=factor(iso3, levels=cntry_key$iso3),
-         nutrient=factor(nutrient, levels=nutrient_key$nutrient))
+         nutrient=factor(nutrient, levels=nutrient_key$nutrient)) %>%
+  # Add percentage labels
+  mutate(perc_label=paste0(round(sev), ""))
 
 
 # Build reference data
@@ -109,7 +111,12 @@ base_theme <-  theme(axis.text=element_text(size=5),
 # SEV raster
 g1 <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
   facet_wrap(~sex, nrow=1) +
-  geom_tile(color="grey40", lwd=0.1) +
+  # Plot raster
+  geom_tile() +
+  # geom_tile(color="grey40", lwd=0.1) +
+  # Plot text
+  geom_text(data=data2_ordered, aes(x=iso3, y=nutrient, label=perc_label),
+            size=1.8, color="black") +
   # Labels
   labs(x="", y="", tag="A") +
   # Legend

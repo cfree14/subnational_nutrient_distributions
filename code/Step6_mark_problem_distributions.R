@@ -52,10 +52,22 @@ data <- data_orig %>%
   # mutate(status=ifelse(problem=="YES" & !is.na(problem), "Scale problem", status)) %>%
   # select(-problem) %>%
   # Arrange
-  select(country:ln_sev_ar, status, everything())
+  select(-c(ear_preg, ear_lact, nutrient_ar)) %>%
+  select(continent, country, iso3,
+         hdi_catg, hdi,
+         iron_type, zinc_type,
+         nutrient_type, nutrient, nutrient_units,
+         sex, age_group, sex_ear:ear, sex_ar:ar,
+         age_group_ul, ul_h, ul_h_units,
+         g_shape:g_sev_ar, g_above_ul,
+         ln_meanlog:ln_sev_ar, ln_above_ul,
+         status, best_dist, mu:kurt, above_ul, sev_ear, sev_ar, ear_use, sev,
+         cutpoint_sev_ear:cutpoint_sev,
+         everything())
 
 # Statuses
 table(data$status)
+colnames(data)
 
 # Export data
 saveRDS(data, file=file.path(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")))
