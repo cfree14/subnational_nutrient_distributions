@@ -227,8 +227,8 @@ data <- data_orig %>%
   select(-iso3_temp) %>%
   # Harmonize nutrient/sex/age for AR merge
   mutate(nutrient_ar=nutrient,
-         nutrient_ar=ifelse(nutrient=="Iron", paste0('Iron (', tolower(iron_type), " absorption)"), nutrient_ar),
-         nutrient_ar=ifelse(nutrient=="Zinc", paste0('Zinc (', tolower(zinc_type), " diet)"), nutrient_ar)) %>%
+         nutrient_ar=ifelse(nutrient=="Iron", paste0('Iron (', tolower(iron_type), ")"), nutrient_ar),
+         nutrient_ar=ifelse(nutrient=="Zinc", paste0('Zinc (', tolower(zinc_type), ")"), nutrient_ar)) %>%
   mutate(age_group_ar=recode(age_group,
                              "0-4"="1-3 yr",
                              "5-9"="7-10 yr",

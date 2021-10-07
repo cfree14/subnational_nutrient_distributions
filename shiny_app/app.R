@@ -27,7 +27,7 @@ dris <-nutriR::dris
 
 # Read distributions
 # dists_full_orig <- nutriR::dists_full # when nutriR is finalized
-dists_full_orig <- readRDS(file=file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
+dists_full_orig <- readRDS(file=file.path(datadir, "nutrient_intake_distributions_31countries_expanded.Rds"))
 
 # Format distributions
 dists_full <- dists_full_orig %>%
@@ -99,7 +99,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      # Illustrate coverage
      h3("Data coverage"),
      p("The figure below illustrates the availability of subnational intake distributions for the selected nutrient by country, sex, and age group."),
-     plotOutput(outputId = "plot_coverage", width=600, height=375),
+     plotOutput(outputId = "plot_coverage", width=600, height=400),
      br(),
 
      # Illustrate distributions
@@ -123,13 +123,13 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
      p("The figure below illustrate the mean habitual intake for each country, sex, and age group compared to the Estimated Average Requirement (EAR), when available. The EAR is from the U.S. Food and Nutrition Board of the National Academy of Sciences."),
      radioButtons(inputId = "scales3", label="X-axis scale:", choices = c("Fixed", "Free"), selected = "Fixed", inline=T),
      radioButtons(inputId = "ul_yn3", label="Show upper limit (UL)?:", choices = c("Yes", "No"), selected = "Yes", inline=T),
-     plotOutput(outputId = "plot_intake_means", width=600, height=2000),
+     plotOutput(outputId = "plot_intake_means", width=600, height=2400),
      br(),
 
      # Illustrate prevalence of inadequate intakes
      h3("Prevalence of inadequate intakes"),
      p("The figure below illustrate the prevalence of inadequate intakes estimated using the probability method."),
-     plotOutput(outputId = "plot_inadequate_intakes", width=600, height=375),
+     plotOutput(outputId = "plot_inadequate_intakes", width=600, height=400),
      br()
 
   ),
