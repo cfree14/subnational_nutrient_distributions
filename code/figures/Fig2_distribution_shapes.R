@@ -16,7 +16,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")) %>%
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds")) %>%
   filter(best_dist!="none" & status!="Not representative")
 
 
@@ -36,7 +36,7 @@ key <- data_orig %>%
                          "alpha-Carotene"="Alpha-carotene",
                          "beta-cryptoxanthin"="Beta-cryptoxanthin")) %>%
   # Aggregate some nutrient types
-  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar"),
+  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar", "Choline"),
                               "Other macronutrient", nutrient_type),
          nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
                               "Vitamin", nutrient_type)) %>%
@@ -60,14 +60,14 @@ data <- data_orig %>%
   # Simplify
   dplyr::select(country:age_group, best_dist, cv, skew) %>%
   # Gather
-  gather(key="metric", value="value", 11:12) %>%
+  gather(key="metric", value="value", 13:14) %>%
   # Recode some nutrients
   mutate(nutrient=recode(nutrient,
                          "beta-Carotene"="Beta-carotene",
                          "alpha-Carotene"="Alpha-carotene",
                          "beta-cryptoxanthin"="Beta-cryptoxanthin")) %>%
   # Aggregate some nutrient types
-  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar"),
+  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar", "Choline"),
                               "Other macronutrient", nutrient_type),
          nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
                               "Vitamin", nutrient_type)) %>%
@@ -186,7 +186,7 @@ g1 <- ggplot(data, aes(x=value_cap, y=nutrient, fill=sex, alpha=0.2)) +
   geom_boxplot(outlier.size=0.5, lwd=0.2, position = "identity") +
   # Labels
   labs(x="Metric of distribution shape", y="", tag="A",
-       title="Distribution shape varies by nutrient and sex") +
+       title="Distribution shape varies by nutrient") +
   scale_fill_discrete(name="") +
   guides(alpha="none") +
   # Theme

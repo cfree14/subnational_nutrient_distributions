@@ -38,6 +38,9 @@ file_key <- tibble(filename=intake_files) %>%
          country=recode(country,
                         "Bang"="Bangladesh",
                         "Bulg"="Bulgaria",
+                        "Burkina"="Burkina Faso",
+                        "Drc"="Congo-Kinshasa",
+                        "Drc2"="Congo-Kinshasa",
                         "Phil"="Philippines",
                         "Rom"="Romania",
                         "Usa"="United States of America")) %>%
@@ -58,13 +61,14 @@ file_key <- tibble(filename=intake_files) %>%
                          "bcarot"="beta-Carotene",
                          "betacarot"="beta-Carotene",
                          "betacrypt"="beta-cryptoxanthin",
-                         "biotin"="Biotin", # Confirm with Simone
-                         "caff"="Caffeine", # Confirm with Simone
+                         "betn"="Betaine",
+                         "biotin"="Biotin",
+                         "caff"="Caffeine",
                          "calc"="Calcium",
                          "carb"="Carbohydrates",
                          "chol"="Choline",
                          "cholest"="Cholesterol",
-                         "chrom"="Chromium", # Confirm with Simone
+                         "chrom"="Chromium",
                          "cu"="Copper",
                          "energy"="Energy",
                          "fat"="Fat",
@@ -85,6 +89,7 @@ file_key <- tibble(filename=intake_files) %>%
                          "omega6"="Omega-6 fatty acids",
                          "panto"="Pantothenic acid",  # Confirm with Simone
                          "phos"="Phosphate",
+                         "phy"="Phytate",
                          "plantomega3"="Plant-based omega-3 fatty acids",
                          "pota"="Potassium",
                          "protein"="Protein",
@@ -114,12 +119,18 @@ file_key <- tibble(filename=intake_files) %>%
   mutate(country=countrycode(country, "country.name", "country.name"),
          iso3=countrycode(country, "country.name", "iso3c"),
          continent=countrycode(country, "country.name", "continent")) %>%
+  # Recode ISO3s/country names for countries with muliple population
+  mutate(iso3=ifelse(grepl("drc_", filename), "COD-1", iso3),
+         iso3=ifelse(grepl("drc2_", filename), "COD-2", iso3),
+         country=ifelse(grepl("drc_", filename), "Congo-Kinshasa 1", country),
+         country=ifelse(grepl("drc2_", filename), "Congo-Kinshasa 2", country)) %>%
   # Arrange
   select(filename, continent, country, iso3, sex, nutrient, everything()) %>%
+  arrange(continent, country, iso3, sex, nutrient) %>%
   # Remove duplicates
   filter(!grepl("_h_w_", filename) & !filename%in%c("usa_m_vitb12.csv", "usa_w_vitb12.csv")) %>%
   # Remove Theobromine
-  filter(nutrient!="Theobromine") %>%
+  # filter(nutrient!="Theobromine") %>%
   # Add units and other names
   left_join(nutr_key, by="nutrient")
 
@@ -128,10 +139,11 @@ file_key <- tibble(filename=intake_files) %>%
 freeR::complete(file_key)
 table(file_key$continent)
 table(file_key$country)
+table(file_key$iso3)
 table(file_key$sex)
 sort(unique(file_key$nutrient))
 
-# Only 1 file per country, sex, nutrient?
+# Only 1 file per country, population, sex, nutrient?
 # must report zero rows
 check1 <- file_key %>%
   group_by(country, iso3, sex, nutrient) %>%
@@ -161,6 +173,7 @@ g <- ggplot(file_key, aes(x=country, y=nutrient)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 g
+
 
 
 

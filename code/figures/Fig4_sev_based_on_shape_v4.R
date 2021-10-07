@@ -16,7 +16,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")) %>%
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds")) %>%
   filter(best_dist!="none" & status!="Not representative")
 
 
@@ -112,7 +112,7 @@ base_theme <-  theme(axis.text=element_text(size=5),
 
 # SEV raster
 g1 <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
-  facet_wrap(~sex, nrow=1) +
+  facet_grid(.~sex, scales="free_x", space="free_x") +
   # Plot raster
   geom_tile() +
   # geom_tile(color="grey40", lwd=0.1) +

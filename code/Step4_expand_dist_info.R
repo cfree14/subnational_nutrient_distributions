@@ -20,7 +20,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries.Rds"))
 
 # Read country key
 cntry_key <- read.csv(file.path(tabledir, "TableS4_country_key.csv"), as.is=T)
@@ -221,8 +221,11 @@ data <- data_orig %>%
   # Set EAR CV
   mutate(ear_cv=ifelse(nutrient=="Vitamin B12", 0.25, 0.1),
          ear_cv=ifelse(is.na(ear), NA, ear_cv)) %>%
+  # Add country key info
+  mutate(iso3_temp=gsub("-1|-2", "", iso3)) %>%
+  left_join(cntry_key %>% select(-country), by=c("iso3_temp"="iso3")) %>%
+  select(-iso3_temp) %>%
   # Harmonize nutrient/sex/age for AR merge
-  left_join(cntry_key) %>%
   mutate(nutrient_ar=nutrient,
          nutrient_ar=ifelse(nutrient=="Iron", paste0('Iron (', tolower(iron_type), " absorption)"), nutrient_ar),
          nutrient_ar=ifelse(nutrient=="Zinc", paste0('Zinc (', tolower(zinc_type), " diet)"), nutrient_ar)) %>%
@@ -302,6 +305,7 @@ data <- data_orig %>%
   ungroup() %>%
   # Arrange
   dplyr::select(continent, country, iso3,
+                representativeness,
                 hdi_catg, hdi,
                 nutrient_type, nutrient, nutrient_units,
                 sex, age_group,
@@ -339,15 +343,15 @@ data %>%
 check <- data %>%
   filter(iso3=="BFA" & nutrient=="Calcium" & sex=="Females" & age_group=="20-24")
 check$sev
-sev(ear=check$ear, cv=check$ear_cv, shape =check$g_shape, rate=check$g_rate, plot=T)
+sev(ear=check$ar, cv=check$ear_cv, shape =check$g_shape, rate=check$g_rate, plot=T)
 
 
 # Export data
 ################################################################################
 
 # Export
-saveRDS(data, file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
-write.csv(data, file=file.path(datadir, "nutrient_intake_distributions_23countries_expanded.csv"), row.names=F)
+saveRDS(data, file.path(datadir, "nutrient_intake_distributions_31countries_expanded.Rds"))
+write.csv(data, file=file.path(datadir, "nutrient_intake_distributions_31countries_expanded.csv"), row.names=F)
 
 
 

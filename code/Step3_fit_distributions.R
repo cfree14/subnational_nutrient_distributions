@@ -12,8 +12,7 @@ library(countrycode)
 library(fitdistrplus)
 
 # Directories
-# inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
-inputdir <- "~/Desktop/all_intakes" # one time only
+inputdir <- "/Users/cfree/Dropbox/subnational-distributions-extended-data/all_intakes" # On Chris Free's computer
 datadir <- "data"
 outdir <- "data/temp"
 plotdir <- "figures"
@@ -177,6 +176,16 @@ swe <- fit_dists(country="Sweden")
 belg <- fit_dists(country="Belgium")
 bosn <- fit_dists(country="Bosnia & Herzegovina")
 den <- fit_dists(country="Denmark")
+
+# New ones
+fit_dists(country="Guatemala")
+fit_dists(country="Ecuador")
+fit_dists(country="Pakistan")
+fit_dists(country="Germany")
+fit_dists(country="Malaysia")
+fit_dists(country="Mozambique")
+fit_dists(country="Congo-Kinshasa 1")
+fit_dists(country="Congo-Kinshasa 2")
 
 
 # Merge distribution fits

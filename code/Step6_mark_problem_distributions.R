@@ -19,7 +19,7 @@ outdir <- "data/temp"
 plotdir <- "figures"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded.Rds"))
 
 
 # Read data
@@ -54,6 +54,7 @@ data <- data_orig %>%
   # Arrange
   select(-c(ear_preg, ear_lact, nutrient_ar)) %>%
   select(continent, country, iso3,
+         representativeness,
          hdi_catg, hdi,
          iron_type, zinc_type,
          nutrient_type, nutrient, nutrient_units,
@@ -70,5 +71,5 @@ table(data$status)
 colnames(data)
 
 # Export data
-saveRDS(data, file=file.path(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds")))
+saveRDS(data, file=file.path(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds")))
 

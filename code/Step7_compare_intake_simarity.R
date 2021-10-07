@@ -19,7 +19,7 @@ outdir <- "data/temp"
 plotdir <- "figures"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries_expanded_final.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds"))
 
 # Format data
 # Reduce to distributions to compare

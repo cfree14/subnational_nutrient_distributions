@@ -1,54 +1,57 @@
 type1,type2,nutrient_label,units,n
 Macronutrient,Fatty acid,alpha-linolenic acid,g,2
-Macronutrient,Fatty acid,Fat,g,21
+Macronutrient,Fatty acid,Fat,g,29
 Macronutrient,Fatty acid,Linoleic acid,g,2
-Macronutrient,Fatty acid,Monounsaturated fatty acids,g,13
-Macronutrient,Fatty acid,Omega-3 fatty acids,g,21
+Macronutrient,Fatty acid,Monounsaturated fatty acids,g,19
+Macronutrient,Fatty acid,Omega-3 fatty acids,g,26
 Macronutrient,Fatty acid,Omega-6 fatty acids,g,4
 Macronutrient,Fatty acid,Plant-based omega-3 fatty acids,g,1
-Macronutrient,Fatty acid,Polyunsaturated fatty acids,g,13
-Macronutrient,Fatty acid,Saturated fat,g,13
+Macronutrient,Fatty acid,Polyunsaturated fatty acids,g,19
+Macronutrient,Fatty acid,Saturated fat,g,19
 Macronutrient,Fatty acid,Trans fat,g,5
 Macronutrient,Other macronutrient,Alcohol,g,3
+Macronutrient,Other macronutrient,Betaine,mg,3
 Macronutrient,Other macronutrient,Caffeine,mg,1
-Macronutrient,Other macronutrient,Carbohydrates,g,21
+Macronutrient,Other macronutrient,Carbohydrates,g,30
 Macronutrient,Other macronutrient,Cholesterol,mg,4
-Macronutrient,Other macronutrient,Choline,mg,4
-Macronutrient,Other macronutrient,Energy,kcal,20
-Macronutrient,Other macronutrient,Fiber,g,19
-Macronutrient,Other macronutrient,Protein,g,21
+Macronutrient,Other macronutrient,Choline,mg,8
+Macronutrient,Other macronutrient,Energy,kcal,29
+Macronutrient,Other macronutrient,Fiber,g,27
+Macronutrient,Other macronutrient,Phytate (Phytic acid),mg,3
+Macronutrient,Other macronutrient,Protein,g,30
+Macronutrient,Other macronutrient,Theobromine,NA,1
 Macronutrient,Sugar,Added sugar,g,2
 Macronutrient,Sugar,Sucrose,g,1
 Macronutrient,Sugar,Sugar,g,6
 Micronutrient,Carotenoid,alpha-Carotene,mcg,3
-Micronutrient,Carotenoid,beta-Carotene,mcg,13
+Micronutrient,Carotenoid,beta-Carotene,mcg,15
 Micronutrient,Carotenoid,beta-cryptoxanthin,mcg,3
 Micronutrient,Carotenoid,Lutein and zeaxanthin,mcg,1
 Micronutrient,Carotenoid,Lycopene,mcg,1
-Micronutrient,Mineral,Calcium,mg,22
+Micronutrient,Mineral,Calcium,mg,30
 Micronutrient,Mineral,Chromium,g,1
 Micronutrient,Mineral,Copper,mg,8
-Micronutrient,Mineral,Iodine,mg,6
-Micronutrient,Mineral,Iron,mg,23
-Micronutrient,Mineral,Magnesium,mg,14
+Micronutrient,Mineral,Iodine,mg,7
+Micronutrient,Mineral,Iron,mg,30
+Micronutrient,Mineral,Magnesium,mg,17
 Micronutrient,Mineral,Manganese,mg,1
-Micronutrient,Mineral,Phosphate,mg,15
-Micronutrient,Mineral,Potassium,mg,14
+Micronutrient,Mineral,Phosphate,mg,16
+Micronutrient,Mineral,Potassium,mg,19
 Micronutrient,Mineral,Selenium,mg,10
-Micronutrient,Mineral,Sodium,mg,14
-Micronutrient,Mineral,Zinc,mg,22
+Micronutrient,Mineral,Sodium,mg,19
+Micronutrient,Mineral,Zinc,mg,30
 Micronutrient,Vitamin,Biotin (Vitamin B7),mcg,1
-Micronutrient,Vitamin,Folate (Vitamin B9),mcg,19
-Micronutrient,Vitamin,Niacin (Vitamin B3),mg,20
+Micronutrient,Vitamin,Folate (Vitamin B9),mcg,25
+Micronutrient,Vitamin,Niacin (Vitamin B3),mg,23
 Micronutrient,Vitamin,Pantothenic acid (Vitamin B5),mg,1
 Micronutrient,Vitamin,Retinol (Vitamin A1),mcg,7
-Micronutrient,Vitamin,Riboflavin (Vitamin B2),mg,22
-Micronutrient,Vitamin,Thiamine (Vitamin B1),mg,21
-Micronutrient,Vitamin,Vitamin A (RAE),mcg,22
-Micronutrient,Vitamin,Vitamin A (RE),mcg,1
-Micronutrient,Vitamin,Vitamin B12,mcg,21
-Micronutrient,Vitamin,Vitamin B6,mg,18
-Micronutrient,Vitamin,Vitamin C,mg,21
-Micronutrient,Vitamin,Vitamin D,mcg,13
-Micronutrient,Vitamin,Vitamin E,mg,12
-Micronutrient,Vitamin,Vitamin K,mg,7
+Micronutrient,Vitamin,Riboflavin (Vitamin B2),mg,29
+Micronutrient,Vitamin,Thiamine (Vitamin B1),mg,27
+Micronutrient,Vitamin,Vitamin A (RAE),mcg,28
+Micronutrient,Vitamin,Vitamin A (RE),mg,1
+Micronutrient,Vitamin,Vitamin B12 (Cobalamin),mcg,28
+Micronutrient,Vitamin,Vitamin B6 (Pyridoxine),mg,25
+Micronutrient,Vitamin,Vitamin C,mg,28
+Micronutrient,Vitamin,Vitamin D,mcg,16
+Micronutrient,Vitamin,Vitamin E,mg,16
+Micronutrient,Vitamin,Vitamin K,mg,8

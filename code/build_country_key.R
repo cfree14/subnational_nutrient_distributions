@@ -21,7 +21,10 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries.Rds"))
+
+# Read representativeness key
+rep_key <- readxl::read_excel(file.path(datadir, "country_representativeness_key.xlsx"))
 
 # Read Human Development Index
 # http://hdr.undp.org/en/content/human-development-index-hdi
@@ -64,25 +67,32 @@ cntry_key <- data_orig %>%
   # Unique countries
   select(country, iso3) %>%
   unique() %>%
+  # Recode countries with multiple pops
+  mutate(iso3=gsub("-1|-2", "", iso3),
+         country=gsub(" 1| 2", "", country)) %>%
+  unique() %>%
   # Add continent
   mutate(continent=countrycode(country, "country.name", "continent")) %>%
-  # Arrange
-  select(continent, country, iso3) %>%
-  arrange(continent, country) %>%
+  # Add representativeness
+  left_join(rep_key %>% select(-country), by="iso3") %>%
+  mutate(representativeness=stringr::str_to_sentence(representativeness)) %>%
   # Add HDI
-  left_join(hdi) %>%
+  left_join(hdi %>% select(-country), by="iso3") %>%
   # Add iron category
   mutate(iron_type=recode(hdi_catg,
-                          "Low"="Low",
-                          "Medium"="Moderate",
-                          "High"="High",
-                          "Very high"="High")) %>%
+                          "Low"="Low absorption",
+                          "Medium"="Moderate absorption",
+                          "High"="High absorption",
+                          "Very high"="High absorption")) %>%
   # Add zinc category
   mutate(zinc_type=recode(hdi_catg,
-                        "Low"="Unrefined",
-                        "Medium"="Semi-unrefined",
-                        "High"="Semi-refined",
-                        "Very high"="Refined"))
+                        "Low"="Unrefined diet",
+                        "Medium"="Semi-unrefined diet",
+                        "High"="Semi-refined diet",
+                        "Very high"="Refined diet")) %>%
+  # Arrange
+  select(continent, country, iso3, representativeness, hdi_catg, hdi, iron_type, zinc_type, everything()) %>%
+  arrange(continent, country)
 
 # Export
 write.csv(cntry_key, file=file.path(tabledir, "TableS4_country_key.csv"), row.names = F)
