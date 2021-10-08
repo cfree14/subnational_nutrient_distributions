@@ -299,8 +299,11 @@ data <- data_orig %>%
          sev=ifelse(nutrient=="Carbohydrates", sev_ear, sev_ar)) %>%
   # Calculate SEVs using cutpoint method
   rowwise() %>%
-  mutate(cutpoint_sev_ear=nutriR::cutpoint(ear = ear, intake_avg = mu, intake_cv = cv),
-         cutpoint_sev_ar=nutriR::cutpoint(ear = ar, intake_avg = mu, intake_cv = cv),
+  mutate(cutpoint_sev_ear_norm=nutriR::cutpoint(ear = ear, intake_avg = mu, intake_cv = cv, intake_dist = "normal"),
+         cutpoint_sev_ar_norm=nutriR::cutpoint(ear = ar, intake_avg = mu, intake_cv = cv, intake_dist = "normal"),
+         cutpoint_sev_norm=ifelse(nutrient=="Carbohydrates", cutpoint_sev_ear_norm, cutpoint_sev_ar_norm),
+         cutpoint_sev_ear=nutriR::cutpoint(ear = ear, intake_avg = mu, intake_cv = cv, intake_dist = best_dist),
+         cutpoint_sev_ar=nutriR::cutpoint(ear = ar, intake_avg = mu, intake_cv = cv, intake_dist = best_dist),
          cutpoint_sev=ifelse(nutrient=="Carbohydrates", cutpoint_sev_ear, cutpoint_sev_ar)) %>%
   ungroup() %>%
   # Arrange

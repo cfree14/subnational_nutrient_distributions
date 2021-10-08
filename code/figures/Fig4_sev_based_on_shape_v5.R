@@ -28,8 +28,6 @@ data <- data_orig %>%
   mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
   mutate(sex=recode(sex, "Males"="Men", "Females"="Women")) %>%
   filter(sex!="Children") %>%
-  # Fix SEV from cutpoint
-  mutate(cutpoint_sev=100*cutpoint_sev) %>%
   # Calculate difference
   mutate(sev_diff=cutpoint_sev-sev,
          meandivear=mu/ear_use,
@@ -178,7 +176,7 @@ g2 <- ggplot(data, aes(x=pmin(meandivear, 5), y=sev, fill=pmin(cv,1))) +
 g2
 
 # SEV probability method compared to cutpoint method
-g3 <- ggplot(data, aes(x=sev, y=cutpoint_sev, fill=pmin(skew,3))) + #, size=meandivear_cap)) +
+g3 <- ggplot(data, aes(x=sev, y=cutpoint_sev_norm, fill=pmin(skew,3))) + #, size=meandivear_cap)) +
   geom_point(pch=21, stroke=0.1, size=1) + # size=1
   # Horizontal line
   geom_abline(slope=1) +
