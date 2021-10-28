@@ -197,7 +197,7 @@ g3 <- ggplot(data, aes(x=sev, y=cutpoint_sev_norm, fill=pmin(skew,3))) + #, size
   # scale_size_continuous(name="Mean/EAR", breaks = seq(0.5, 1, 2, 5))
   # Theme
   theme_bw() + base_theme +
-  theme(legend.position = c(0.15, 0.75),
+  theme(legend.position = c(0.25, 0.75),
         legend.key.size = unit(0.3, "cm"),
         legend.background = element_rect(fill=alpha('blue', 0)))
 g3
@@ -224,7 +224,7 @@ g4 <- ggplot(data, aes(x=sev, y=cutpoint_sev, fill=pmin(skew,3))) + #, size=mean
   # scale_size_continuous(name="Mean/EAR", breaks = seq(0.5, 1, 2, 5))
   # Theme
   theme_bw() + base_theme +
-  theme(legend.position = c(0.15, 0.75),
+  theme(legend.position = c(0.25, 0.75),
         legend.key.size = unit(0.3, "cm"),
         legend.background = element_rect(fill=alpha('blue', 0)))
 g4

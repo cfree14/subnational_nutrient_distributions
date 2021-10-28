@@ -74,8 +74,8 @@ age_key <- reqs %>%
                                  "7-11 mo"="0.5-1 yr",
                                  ">70 yr"="71-100 yr",
                                  ">70 y"="71-100 yr",
-                                 "≤ 18 y"="0-18 yr",
-                                 "≤ 18 yr"="0-18 yr") %>% gsub(" yr", "", .)) %>%
+                                 "≤ 18 y"="16-18 yr",
+                                 "≤ 18 yr"="16-18 yr") %>% gsub(" yr", "", .)) %>%
   # Seperate
   tidyr::separate(age_group_simple, sep="-", into=c("age1", "age2"), remove=F) %>%
   # Gather

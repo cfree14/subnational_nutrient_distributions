@@ -54,7 +54,9 @@ stats <- data %>%
                          "alpha-Carotene"="Alpha-carotene",
                          "beta-cryptoxanthin"="Beta-cryptoxanthin")) %>%
   # Aggregate some nutrient types
-  mutate(nutrient_type=ifelse(nutrient %in% c("Sugar"),
+  mutate(nutrient_type=ifelse(nutrient %in% c("Choline"),
+                              "Vitamin", nutrient_type),
+         nutrient_type=ifelse(nutrient %in% c("Sugar"),
                               "Other macronutrient", nutrient_type),
          nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
                               "Vitamin", nutrient_type)) %>%

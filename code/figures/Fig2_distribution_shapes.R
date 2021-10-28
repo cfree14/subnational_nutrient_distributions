@@ -60,7 +60,7 @@ data <- data_orig %>%
   # Simplify
   dplyr::select(country:age_group, best_dist, cv, skew) %>%
   # Gather
-  gather(key="metric", value="value", 13:14) %>%
+  gather(key="metric", value="value", 14:15) %>%
   # Recode some nutrients
   mutate(nutrient=recode(nutrient,
                          "beta-Carotene"="Beta-carotene",

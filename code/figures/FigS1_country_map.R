@@ -25,7 +25,8 @@ world_orig <- rnaturalearth::ne_countries("small", returnclass = "sf")
 # Build data
 world <- world_orig %>%
   # (data_yn=gu_a3 %in% data$iso3)
-  left_join(data %>% select(iso3, representativeness), by=c("gu_a3"="iso3"))
+  left_join(data %>% select(iso3, representativeness), by=c("gu_a3"="iso3")) %>%
+  mutate(representativeness=factor(representativeness, levels=c("Local", "Regional", "National")))
 
 # Countries with data
 centroids <- world %>%
