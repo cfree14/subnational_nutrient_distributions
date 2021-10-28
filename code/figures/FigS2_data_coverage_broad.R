@@ -36,7 +36,8 @@ stats <- data %>%
                             "Females-Males"="Both males and females",
                             "Children-Females-Males"="Both males and females")) %>%
   mutate(type2=recode(type2,
-                      "Other macronutrient"="Other\nmacronutrient"))
+                      "Other macronutrient"="Other\nmacronutrient",
+                      "Other micronutrient"="Other\nmicronutrient"))
 
 
 # Plot data
@@ -57,12 +58,12 @@ g <- ggplot(stats, aes(x=country, y=nutrient, fill=sexes)) +
         axis.title=element_blank(),
         legend.text=element_text(size=6),
         legend.title=element_text(size=7),
-        strip.text=element_text(size=6),
+        strip.text=element_text(size=5),
         plot.title=element_blank(),
         legend.position = "top")
 g
 
 # Export data
 ggsave(g, filename=file.path(plotdir, "FigS2_data_coverage_broad.png"),
-       width=6.5, height=6.75, units="in", dpi=600)
+       width=6.5, height=7, units="in", dpi=600)
 

@@ -47,7 +47,8 @@ stats <- data %>%
   # Format nutrient type
   mutate(nutrient_type=recode(nutrient_type,
                               "Sugar"="Other macronutrient",
-                              "Carotenoid"="Other macronutrient")) %>%
+                              "Carotenoid"="Other macronutrient"),
+         nutrient_type=ifelse(nutrient=="Choline", "Vitamin", nutrient_type)) %>%
   # Calculate median percent overlap
   group_by(nutrient_type, nutrient, age_group) %>%
   summarise(poverlap=median(poverlap, na.rm=T)) %>%
