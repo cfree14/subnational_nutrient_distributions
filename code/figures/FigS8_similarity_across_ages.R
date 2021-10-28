@@ -67,7 +67,7 @@ my_theme <-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
                    axis.title=element_text(size=8),
                    legend.text=element_text(size=6),
                    legend.title=element_text(size=8),
-                   strip.text=element_text(size=7),
+                   strip.text=element_text(size=6),
                    plot.title=element_text(size=10),
                    # Gridlines
                    panel.grid.major = element_blank(),
@@ -92,7 +92,7 @@ g
 
 # Export plot
 ggsave(g, filename=file.path(plotdir, "FigS8_similarity_across_ages.png"),
-       width=6.5, height=5.5, units="in", dpi=600)
+       width=6.5, height=6.5, units="in", dpi=600)
 
 
 
