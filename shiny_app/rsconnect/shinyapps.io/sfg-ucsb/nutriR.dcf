@@ -5,8 +5,8 @@ account: sfg-ucsb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4516715
-bundleId: 5040218
+bundleId: 5187669
 url: https://emlab-ucsb.shinyapps.io/nutriR/
-when: 1631815151.37862
+when: 1635447229.43785
 asMultiple: FALSE
 asStatic: FALSE

@@ -175,7 +175,7 @@ g2 <- ggplot(dists_sim %>% filter(case=="Low overlap"),
   # Add EAR
   geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Low overlap"], linetype="solid", lwd=0.4) +
   # Labels
-  labs(x="Habitual intake (mg)", y="Density",
+  labs(x="Usual intake (mg)", y="Density",
        title="Low overlap", subtitle=title, tag="B") +
   # Theme
   theme_bw() + subpanel_theme
@@ -195,7 +195,7 @@ g3 <- ggplot(dists_sim %>% filter(case=="Moderate overlap"),
   # Add EAR
   geom_vline(xintercept=dist_stats$ear[dist_stats$case=="Moderate overlap"], linetype="solid", lwd=0.4) +
   # Labels
-  labs(x="Habitual intake (mg)", y="Density",
+  labs(x="Usual intake (mg)", y="Density",
        title="Moderate overlap", subtitle=title, tag="C") +
   # Theme
   theme_bw() + subpanel_theme
@@ -216,7 +216,7 @@ g4 <- ggplot(dists_sim %>% filter(case=="High overlap"),
   # Add EAR
   geom_vline(xintercept=dist_stats$ear[dist_stats$case=="High overlap"], linetype="solid", lwd=0.4) +
   # Labels
-  labs(x="Habitual intake (mg)", y="Density",
+  labs(x="Usual intake (mg)", y="Density",
        title="High overlap", subtitle=title, tag="D") +
   # Theme
   theme_bw() + subpanel_theme

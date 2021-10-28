@@ -18,7 +18,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read distribution key
-dists <- readRDS(file.path(datadir, "nutrient_intake_distributions_23countries.Rds")) %>%
+dists <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries.Rds")) %>%
   filter(best_dist!="none")
 
 
@@ -60,7 +60,7 @@ g <- ggplot(data, aes(x=intake)) +
   # Plot fits
   geom_line(data=df, mapping=aes(x=intake, y=density, color=distribution)) +
   # Labels
-  labs(x="Habitual intake (mg/d)", y="Density") +
+  labs(x="Usual intake (mg/d)", y="Density") +
   scale_color_manual(name="Distribution", values=c("darkred", "navy")) +
   # Theme
   theme_bw() +
@@ -80,7 +80,7 @@ g <- ggplot(data, aes(x=intake)) +
 g
 
 # Export plot
-ggsave(g, filename=file.path(plotdir, "FigSX_fitting_procedure_example.png"),
+ggsave(g, filename=file.path(plotdir, "FigS4_fitting_procedure_example.png"),
        width=3.5, height=3.5, units="in", dpi=600)
 
 

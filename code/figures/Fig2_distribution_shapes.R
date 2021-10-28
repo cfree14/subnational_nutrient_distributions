@@ -126,7 +126,7 @@ dist_cv_sim <- nutriR::generate_dists(dists_cv) %>%
 ggplot(dist_cv_sim, aes(x=intake, y=density, color=country_label)) +
   geom_line() +
   # Labels
-  labs(x="Habitual intake (mg)", y="Density",
+  labs(x="Usual intake (mg)", y="Density",
        title="Calcium intake for 20-24-yr-old women") +
   # Theme
   theme_bw()
@@ -155,7 +155,7 @@ dist_skew_sim <- nutriR::generate_dists(dists_skew) %>%
 ggplot(dist_skew_sim, aes(x=intake, y=density, color=country)) +
   geom_line() +
   # Labels
-  labs(x="Habitual intake (mg)", y="Density",
+  labs(x="Usual intake (mg)", y="Density",
        title="Vitamin A intake for 45-49-yr-old men") +
   # Theme
   theme_bw()
@@ -208,7 +208,7 @@ g2 <- ggplot(dist_cv_sim, aes(x=intake, y=density, color=country_label)) +
   # EAR
   geom_vline(xintercept=dist_cv_ear, linetype="solid", lwd=0.3) +
   # Labels
-  labs(x="Habitual intake (mg)", y="Density", tag="B",
+  labs(x="Usual intake (mg)", y="Density", tag="B",
        title="Impact of variability",
        subtitle="Calcium intake for 20-24-yr-old women") +
   # Legend
@@ -233,7 +233,7 @@ g3 <- ggplot(dist_skew_sim, aes(x=intake, y=density, color=country_label)) +
   # EAR
   geom_vline(xintercept=dist_skew_ear, linetype="solid", lwd=0.3) +
   # Labels
-  labs(x="Habitual intake (mg)", y="Density", tag="C",
+  labs(x="Usual intake (mg)", y="Density", tag="C",
        title="Impact of skewness",
        subtitle="Vitamin A intake for 40-45-yr-old men") +
   # Legend

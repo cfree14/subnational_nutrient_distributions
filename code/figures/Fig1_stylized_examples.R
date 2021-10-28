@@ -34,7 +34,7 @@ norm_sd <- norm_mu * cv
 x <- seq(0.1, 25, 0.1)
 norm_y <- dnorm(x=x, mean=norm_mu, sd=norm_sd)
 # plot(norm_y~x)
-norm_sev <- round(nutriR::cutpoint(ear=ear, intake_avg = norm_mu, intake_cv=cv) * 100, 0)
+norm_sev <- round(nutriR::cutpoint(ear=ear, intake_avg = norm_mu, intake_cv=cv, intake_dist="normal"), 0)
 norm_label <- paste0("Normal (", norm_sev, "%)")
 norm_df <- tibble(dist=norm_label,
                   x=x,
@@ -137,7 +137,7 @@ g1 <- ggplot(df1, aes(x=x, y=y, color=dist)) +
   # Plot mean
   geom_vline(xintercept=mu, linetype="dotted", color="black") +
   # Labels
-  labs(x="Habitual intake (mg)", y='Density', tag="A",
+  labs(x="Usual intake (mg)", y='Density', tag="A",
        title="Distribution matters",
        subtitle="Same mean and variability but different distribution") +
   scale_color_discrete(name="Distribution\n(% inadequate intake)") +
@@ -154,7 +154,7 @@ g2 <- ggplot(df2, aes(x=x, y=y, color=dist)) +
   # Plot mean
   geom_vline(xintercept=mu, linetype="dotted", color="black") +
   # Labels
-  labs(x="Habitual intake (mg)", y='Density', tag="B",
+  labs(x="Usual intake (mg)", y='Density', tag="B",
        title="Variability matters",
        subtitle="Same mean and distribution but different variability") +
   scale_color_discrete(name="Variability\n(% inadequate intake)") +
