@@ -16,7 +16,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds")) %>%
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries_expanded_final.Rds")) %>%
   filter(best_dist!="none" & status!="Not representative")
 
 
@@ -145,7 +145,9 @@ g1 <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   theme(legend.position = "right",
         legend.key.size = unit(0.4, "cm"),
-        legend.background = element_rect(fill=alpha('blue', 0)))
+        legend.background = element_rect(fill=alpha('blue', 0)),
+        legend.margin = margin(0,0,0,0),
+        legend.box.margin = margin(-5,-5,-5,-5))
 g1
 
 # SEV based on variability

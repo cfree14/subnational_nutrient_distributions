@@ -14,6 +14,7 @@
 "Americas","United States","USA","National","Very high",0.926,"High absorption","Refined diet"
 "Asia","Bangladesh","BGD","Local","Medium",0.632,"Moderate absorption","Semi-unrefined diet"
 "Asia","China","CHN","National","High",0.761,"High absorption","Semi-refined diet"
+"Asia","India","IND","Regional","Medium",0.645,"Moderate absorption","Semi-unrefined diet"
 "Asia","Laos","LAO","National","Medium",0.613,"Moderate absorption","Semi-unrefined diet"
 "Asia","Malaysia","MYS","Local","Very high",0.81,"High absorption","Refined diet"
 "Asia","Pakistan","PAK","Local","Medium",0.557,"Moderate absorption","Semi-unrefined diet"

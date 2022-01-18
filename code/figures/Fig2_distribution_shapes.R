@@ -16,7 +16,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds")) %>%
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries_expanded_final.Rds")) %>%
   filter(best_dist!="none" & status!="Not representative")
 
 
@@ -68,11 +68,14 @@ data <- data_orig %>%
                          "beta-cryptoxanthin"="Beta-cryptoxanthin")) %>%
   # Aggregate some nutrient types
   mutate(nutrient_type=ifelse(nutrient %in% c("Sugar", "Choline"),
-                              "Other macronutrient", nutrient_type),
-         nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
-                              "Vitamin", nutrient_type)) %>%
+                              "Other macronutrient", nutrient_type)) %>%
+         # nutrient_type=ifelse(nutrient %in% c("Alpha-carotene", "Beta-carotene", "Beta-cryptoxanthin"),
+         #                      "Vitamin", nutrient_type)) %>%
   # Recode nutrient types
-  mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
+  mutate(nutrient_type=recode(nutrient_type,
+                              "Other macronutrient"="Other\nmacronutrient",
+                              "Other micronutrient"="Other\nmicronutrient",
+                              "Carotenoid"="Other\nmicronutrient")) %>%
   # Recode metric names
   mutate(metric=recode_factor(metric, "cv"="Coefficient of variation (CV)", "skew"="Skewness")) %>%
   # Cap
@@ -169,10 +172,11 @@ base_theme <-  theme(axis.text=element_text(size=5),
                      axis.title=element_text(size=7),
                      legend.text=element_text(size=4),
                      legend.title=element_text(size=5),
-                     strip.text=element_text(size=6),
+                     strip.text=element_text(size=5),
                      plot.title=element_text(size=7),
                      plot.subtitle=element_text(size=6),
                      plot.tag=element_text(size=8, face="bold"),
+                     plot.tag.position = c(0,0.999),
                      # Gridlines
                      panel.grid.major = element_blank(),
                      panel.grid.minor = element_blank(),
@@ -191,7 +195,9 @@ g1 <- ggplot(data, aes(x=value_cap, y=nutrient, fill=sex, alpha=0.2)) +
   guides(alpha="none") +
   # Theme
   theme_bw() + base_theme +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        legend.margin=margin(rep(0,4)),
+        legend.box.margin = margin(-10, -5, -5, -5))
 g1
 
 # Plot CV examples

@@ -21,7 +21,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries.Rds"))
 
 # Read representativeness key
 rep_key <- readxl::read_excel(file.path(datadir, "country_representativeness_key.xlsx"))

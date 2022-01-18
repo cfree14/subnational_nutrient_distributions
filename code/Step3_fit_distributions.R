@@ -178,6 +178,7 @@ bosn <- fit_dists(country="Bosnia & Herzegovina")
 den <- fit_dists(country="Denmark")
 
 # New ones
+fit_dists(country="India")
 fit_dists(country="Guatemala")
 fit_dists(country="Ecuador")
 fit_dists(country="Pakistan")

@@ -18,7 +18,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read distribution key
-dists <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries.Rds")) %>%
+dists <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries.Rds")) %>%
   filter(best_dist!="none")
 
 

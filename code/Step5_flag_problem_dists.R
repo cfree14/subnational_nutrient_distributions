@@ -19,7 +19,7 @@ outdir <- "data/temp"
 plotdir <- "figures"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries_expanded.Rds"))
 
 
 # Inspect CV distribution
@@ -356,11 +356,5 @@ ggsave(g2, filename=file.path(plotdir, "FigX_anamalous_distributions2.png"),
 
 
 write.csv(data2_probs, file=file.path(datadir, "anamalous_distributions_in_spade_output2.csv"), row.names=F)
-
-
-
-
-
-
 
 

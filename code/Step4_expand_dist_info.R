@@ -20,7 +20,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries.Rds"))
 
 # Read country key
 cntry_key <- read.csv(file.path(tabledir, "TableS4_country_key.csv"), as.is=T)
@@ -353,8 +353,8 @@ sev(ear=check$ar, cv=check$ear_cv, shape =check$g_shape, rate=check$g_rate, plot
 ################################################################################
 
 # Export
-saveRDS(data, file.path(datadir, "nutrient_intake_distributions_31countries_expanded.Rds"))
-write.csv(data, file=file.path(datadir, "nutrient_intake_distributions_31countries_expanded.csv"), row.names=F)
+saveRDS(data, file.path(datadir, "nutrient_intake_distributions_32countries_expanded.Rds"))
+write.csv(data, file=file.path(datadir, "nutrient_intake_distributions_32countries_expanded.csv"), row.names=F)
 
 
 
