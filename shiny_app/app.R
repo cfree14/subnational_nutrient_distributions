@@ -27,7 +27,7 @@ dris <-nutriR::dris
 
 # Read distributions
 # dists_full_orig <- nutriR::dists_full # when nutriR is finalized
-dists_full_orig <- readRDS(file=file.path(datadir, "nutrient_intake_distributions_31countries_expanded.Rds"))
+dists_full_orig <- readRDS(file=file.path(datadir, "nutrient_intake_distributions_32countries_expanded.Rds"))
 
 # Format distributions
 dists_full <- dists_full_orig %>%
@@ -150,7 +150,7 @@ ui <- navbarPage("Subnational nutrient intake distribution explorer",
 
      # Illustrate distribution
      h3("Habitual intake distributions"),
-     p("The figure belows shows habitual intake distributions ny nutrient, sex, and age within the selected country. The vertical lines indicate the EAR, if available."),
+     p("The figure belows shows habitual intake distributions by nutrient, sex, and age within the selected country. The vertical lines indicate the EAR, if available."),
      radioButtons(inputId = "ul_yn4", label="Show upper limit (UL)?:", choices = c("Yes", "No"), selected = "Yes", inline=T),
      plotOutput(outputId = "plot_intake_dists_cntry", width=800, height=1600),
      br(),
