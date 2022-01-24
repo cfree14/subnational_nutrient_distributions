@@ -33,7 +33,9 @@ data <- data_orig %>%
          meandivear=mu/ear_use,
          meandivear_cap=pmin(5, meandivear)) %>%
   # Add some categories
-  mutate(meandivear_catg=ifelse(meandivear>=1, "above", "below"))
+  mutate(meandivear_catg=ifelse(meandivear>=1, "above", "below"))  %>%
+  # Remove Vitamin D and carbohydrates
+  filter(!nutrient %in% c("Vitamin D", "Carbohydrates"))
 
 # Build data for raster
 data2 <- data_orig %>%
@@ -46,8 +48,8 @@ data2 <- data_orig %>%
   group_by(nutrient, country, iso3, representativeness, sex) %>%
   summarize(sev=mean(sev)) %>%
   ungroup() %>%
-  # Remove Vitamin D
-  filter(nutrient!="Vitamin D")
+  # Remove Vitamin D and carbohydrates
+  filter(!nutrient %in% c("Vitamin D", "Carbohydrates"))
 
 cntry_key <- data2 %>%
   group_by(iso3, country, representativeness) %>%
