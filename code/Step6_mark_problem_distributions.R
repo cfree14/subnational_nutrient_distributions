@@ -21,6 +21,9 @@ plotdir <- "figures"
 # Read data
 data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries_expanded.Rds"))
 
+# Special ones to flag
+# Bulgaria Men/Women Iodine/Selenium
+
 
 # Read data
 ################################################################################
@@ -46,7 +49,8 @@ data <- data_orig %>%
                        "gamma"="Fit",
                        "log-normal"="Fit",
                        "none"="Failed to fit"),
-         status=ifelse(cv<cv_lo_final & !is.na(cv), "Not representative", status)) %>%
+         status=ifelse(cv<cv_lo_final & !is.na(cv), "Not representative", status),
+         status=ifelse(country=="Bulgaria" & nutrient %in% c("Iodine", "Selenium"), "Not representative", status)) %>%
   # Mark problems
   # left_join(prob_key) %>%
   # mutate(status=ifelse(problem=="YES" & !is.na(problem), "Scale problem", status)) %>%

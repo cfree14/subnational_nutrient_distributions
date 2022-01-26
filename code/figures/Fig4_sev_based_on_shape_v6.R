@@ -243,3 +243,19 @@ g
 ggsave(g, filename=file.path(plotdir, "Fig4_sev_based_on shape_v6.png"),
        width=6.5, height=5, units="in", dpi=600)
 
+
+# Inspect outliers
+################################################################################
+
+outliers <- data %>%
+  filter(sev<4 & cutpoint_sev>25)
+
+outliers <- data %>%
+  filter(sev<4 & cutpoint_sev_norm>25)
+# Bulgaria Men/Women Iodine/Selenium
+
+
+
+
+
+
