@@ -240,7 +240,7 @@ g <- gridExtra::grid.arrange(g1, g2, g3, g4,
 g
 
 # Export
-ggsave(g, filename=file.path(plotdir, "Fig4_sev_based_on shape_v6.png"),
+ggsave(g, filename=file.path(plotdir, "Fig5_sev_based_on shape_v6.png"),
        width=6.5, height=5, units="in", dpi=600)
 
 

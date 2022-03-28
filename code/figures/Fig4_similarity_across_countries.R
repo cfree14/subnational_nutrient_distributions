@@ -231,7 +231,7 @@ g <- gridExtra::grid.arrange(g1, g2, g3, g4,
 
 
 # Export plot
-figtitle <- paste0("Fig3_similarity_across_countries_", ncountries_req, ".png")
+figtitle <- paste0("Fig4_similarity_across_countries_", ncountries_req, ".png")
 ggsave(g, filename=file.path(plotdir, figtitle),
        width=6.5, height=5, units="in", dpi=600)
 
