@@ -121,7 +121,7 @@ main_theme <-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1
                      axis.text=element_text(size=5),
                      axis.title=element_text(size=6),
                      legend.text=element_text(size=5),
-                     legend.title=element_text(size=6),
+                     legend.title=element_text(size=6, hjust=1),
                      strip.text=element_text(size=6),
                      plot.tag=element_text(size=8),
                      # Gridlines
@@ -154,7 +154,7 @@ g1 <- ggplot(stats, aes(y=nutrient, x=age, fill=poverlap)) +
   # Labels
   labs(x="Age group (yr)", y="", tag="A") +
   # Legend
-  scale_fill_gradientn(name="Median\npercent overlap",
+  scale_fill_gradientn(name="Median percent overlap\nacross countries",
                        colors=rev(RColorBrewer::brewer.pal(9, "YlOrRd"))) +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
   # Theme
