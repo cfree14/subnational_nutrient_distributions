@@ -17,7 +17,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read distribution key
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries.Rds"))
 
 
 # Build data

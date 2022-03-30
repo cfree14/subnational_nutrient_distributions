@@ -19,7 +19,7 @@ outdir <- "data/temp"
 plotdir <- "figures"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries_expanded_final.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds"))
 
 # Format data
 # Reduce to distributions to compare
@@ -126,7 +126,7 @@ data1 <- purrr::map_df(1:nrow(key1), function(x){
 })
 
 # Export data
-saveRDS(data1, file=file.path(datadir, "percent_overlap_among_country_pairs.Rds"))
+saveRDS(data1, file=file.path(datadir, "percent_overlap_among_country_pairs_31countries.Rds"))
 
 # Compute stats
 stats1 <- data1 %>%
@@ -254,7 +254,7 @@ data2 <- purrr::map_df(1:nrow(key2), function(x){
 })
 
 # Export data
-saveRDS(data2, file=file.path(datadir, "percent_overlap_among_age_pairs.Rds"))
+saveRDS(data2, file=file.path(datadir, "percent_overlap_among_age_pairs_31countries.Rds"))
 
 # Compute stats
 stats2 <- data2 %>%
@@ -381,7 +381,7 @@ data3 <- purrr::map_df(1:nrow(key3), function(x){
 })
 
 # Export data
-saveRDS(data3, file=file.path(datadir, "percent_overlap_among_sex_pairs.Rds"))
+saveRDS(data3, file=file.path(datadir, "percent_overlap_among_sex_pairs_31countries.Rds"))
 
 # Compute stats
 stats3 <- data3 %>%

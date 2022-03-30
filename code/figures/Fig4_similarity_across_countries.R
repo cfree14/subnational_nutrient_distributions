@@ -20,7 +20,7 @@ tabledir <- "tables"
 data_orig <- readRDS(file=file.path(datadir, "percent_overlap_among_country_pairs.Rds"))
 
 # Read distribution data
-dists_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries_expanded_final.Rds")) %>%
+dists_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded_final.Rds")) %>%
   filter(best_dist!="none" & status!="Not representative")
 
 

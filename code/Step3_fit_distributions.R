@@ -185,7 +185,7 @@ fit_dists(country="Pakistan")
 fit_dists(country="Germany")
 fit_dists(country="Malaysia")
 fit_dists(country="Mozambique")
-fit_dists(country="Congo-Kinshasa 1")
+fit_dists(country="Congo-Kinshasa")
 fit_dists(country="Congo-Kinshasa 2")
 
 

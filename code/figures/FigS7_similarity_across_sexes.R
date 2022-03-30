@@ -17,7 +17,7 @@ plotdir <- "figures"
 tabledir <- "tables"
 
 # Read data
-data_orig <- readRDS(file=file.path(datadir, "percent_overlap_among_sex_pairs.Rds"))
+data_orig <- readRDS(file=file.path(datadir, "percent_overlap_among_sex_pairs_31countries.Rds"))
 
 
 # Build data

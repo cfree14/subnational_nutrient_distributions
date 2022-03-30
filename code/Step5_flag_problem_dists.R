@@ -19,7 +19,7 @@ outdir <- "data/temp"
 plotdir <- "figures"
 
 # Read data
-data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_32countries_expanded.Rds"))
+data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countries_expanded.Rds"))
 
 # Special ones to flag
 # Bulgaria Men/Women Iodine/Selenium

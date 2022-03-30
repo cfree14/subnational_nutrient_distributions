@@ -1,6 +1,6 @@
 "type1","type2","nutrient_label","units","n"
 "Macronutrient","Fatty acid","alpha-linolenic acid","g",2
-"Macronutrient","Fatty acid","Fat","g",29
+"Macronutrient","Fatty acid","Fat","g",28
 "Macronutrient","Fatty acid","Linoleic acid","g",2
 "Macronutrient","Fatty acid","Monounsaturated fatty acids","g",19
 "Macronutrient","Fatty acid","Omega-3 fatty acids","g",26
@@ -10,11 +10,11 @@
 "Macronutrient","Fatty acid","Saturated fat","g",19
 "Macronutrient","Fatty acid","Trans fat","g",5
 "Macronutrient","Other macronutrient","Alcohol","g",3
-"Macronutrient","Other macronutrient","Carbohydrates","g",30
+"Macronutrient","Other macronutrient","Carbohydrates","g",29
 "Macronutrient","Other macronutrient","Cholesterol","mg",4
-"Macronutrient","Other macronutrient","Energy","kcal",29
-"Macronutrient","Other macronutrient","Fiber","g",27
-"Macronutrient","Other macronutrient","Protein","g",30
+"Macronutrient","Other macronutrient","Energy","kcal",28
+"Macronutrient","Other macronutrient","Fiber","g",26
+"Macronutrient","Other macronutrient","Protein","g",29
 "Macronutrient","Sugar","Added sugar","g",2
 "Macronutrient","Sugar","Sucrose","g",1
 "Macronutrient","Sugar","Sugar","g",6
@@ -23,35 +23,35 @@
 "Micronutrient","Carotenoid","beta-cryptoxanthin","mcg",3
 "Micronutrient","Carotenoid","Lutein and zeaxanthin","mcg",1
 "Micronutrient","Carotenoid","Lycopene","mcg",1
-"Micronutrient","Mineral","Calcium","mg",30
+"Micronutrient","Mineral","Calcium","mg",29
 "Micronutrient","Mineral","Chromium","g",1
 "Micronutrient","Mineral","Copper","mg",8
 "Micronutrient","Mineral","Iodine","mg",7
-"Micronutrient","Mineral","Iron","mg",30
-"Micronutrient","Mineral","Magnesium","mg",17
+"Micronutrient","Mineral","Iron","mg",29
+"Micronutrient","Mineral","Magnesium","mg",16
 "Micronutrient","Mineral","Manganese","mg",1
 "Micronutrient","Mineral","Phosphate","mg",16
-"Micronutrient","Mineral","Potassium","mg",19
+"Micronutrient","Mineral","Potassium","mg",18
 "Micronutrient","Mineral","Selenium","mg",10
-"Micronutrient","Mineral","Sodium","mg",19
-"Micronutrient","Mineral","Zinc","mg",30
+"Micronutrient","Mineral","Sodium","mg",18
+"Micronutrient","Mineral","Zinc","mg",29
 "Micronutrient","Other micronutrient","Betaine","mg",3
 "Micronutrient","Other micronutrient","Caffeine","mg",1
 "Micronutrient","Other micronutrient","Choline","mg",8
 "Micronutrient","Other micronutrient","Phytate (Phytic acid)","mg",3
 "Micronutrient","Other micronutrient","Theobromine","mg",1
 "Micronutrient","Vitamin","Biotin (Vitamin B7)","mcg",1
-"Micronutrient","Vitamin","Folate (Vitamin B9)","mcg",25
-"Micronutrient","Vitamin","Niacin (Vitamin B3)","mg",23
+"Micronutrient","Vitamin","Folate (Vitamin B9)","mcg",24
+"Micronutrient","Vitamin","Niacin (Vitamin B3)","mg",22
 "Micronutrient","Vitamin","Pantothenic acid (Vitamin B5)","mg",1
 "Micronutrient","Vitamin","Retinol (Vitamin A1)","mcg",7
-"Micronutrient","Vitamin","Riboflavin (Vitamin B2)","mg",29
-"Micronutrient","Vitamin","Thiamine (Vitamin B1)","mg",27
-"Micronutrient","Vitamin","Vitamin A (RAE)","mcg",28
+"Micronutrient","Vitamin","Riboflavin (Vitamin B2)","mg",28
+"Micronutrient","Vitamin","Thiamine (Vitamin B1)","mg",26
+"Micronutrient","Vitamin","Vitamin A (RAE)","mcg",27
 "Micronutrient","Vitamin","Vitamin A (RE)","mg",1
-"Micronutrient","Vitamin","Vitamin B12 (Cobalamin)","mcg",28
-"Micronutrient","Vitamin","Vitamin B6 (Pyridoxine)","mg",25
-"Micronutrient","Vitamin","Vitamin C","mg",28
-"Micronutrient","Vitamin","Vitamin D","mcg",16
-"Micronutrient","Vitamin","Vitamin E","mg",16
+"Micronutrient","Vitamin","Vitamin B12 (Cobalamin)","mcg",27
+"Micronutrient","Vitamin","Vitamin B6 (Pyridoxine)","mg",24
+"Micronutrient","Vitamin","Vitamin C","mg",27
+"Micronutrient","Vitamin","Vitamin D","mcg",15
+"Micronutrient","Vitamin","Vitamin E","mg",15
 "Micronutrient","Vitamin","Vitamin K","mg",8

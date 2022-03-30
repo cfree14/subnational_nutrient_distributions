@@ -120,9 +120,9 @@ file_key <- tibble(filename=intake_files) %>%
          iso3=countrycode(country, "country.name", "iso3c"),
          continent=countrycode(country, "country.name", "continent")) %>%
   # Recode ISO3s/country names for countries with muliple population
-  mutate(iso3=ifelse(grepl("drc_", filename), "COD-1", iso3),
+  mutate(iso3=ifelse(grepl("drc_", filename), "COD", iso3),
          iso3=ifelse(grepl("drc2_", filename), "COD-2", iso3),
-         country=ifelse(grepl("drc_", filename), "Congo-Kinshasa 1", country),
+         country=ifelse(grepl("drc_", filename), "Congo-Kinshasa", country),
          country=ifelse(grepl("drc2_", filename), "Congo-Kinshasa 2", country)) %>%
   # Arrange
   select(filename, continent, country, iso3, sex, nutrient, everything()) %>%
@@ -132,7 +132,9 @@ file_key <- tibble(filename=intake_files) %>%
   # Remove Theobromine
   # filter(nutrient!="Theobromine") %>%
   # Add units and other names
-  left_join(nutr_key, by="nutrient")
+  left_join(nutr_key, by="nutrient") %>%
+  # Remove DRC2
+  filter(iso3!="COD-2")
 
 
 # Inspect
