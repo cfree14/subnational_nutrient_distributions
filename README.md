@@ -2,7 +2,7 @@
 
 This GitHub repository contains the data and code for the following paper:
 
-* Passarelli S, Free CM, Allen LH, Beal T, Biltoft-Jensen AP, Bromage S, Cao L, Castellanos-Guitiérrez A, Christensen T, Crispim SP, Dekkers A, De Ridder K, Gicevic S, Lee C, Li Y, Moursi M, Moyersoen I, Batis C, Schmidhuber J, Shepon A, Viana DF, Golden CD (in prep) Estimating national and sub-national habitual nutrient intake distributions of global diets. _Near submission._
+* Passarelli S, Free CM, Allen LH, Batis C, Beal T, Biltoft-Jensen AP, Bromage S, Cao L, Castellanos-Guitiérrez A, Christensen T, Crispim SP, Dekkers A, De Ridder K, Kronsteiner-Gicevic S, Lee C, Li Y, Moursi M, Moyersoen I, Schmidhuber J, Shepon A, Viana DF, Golden CD (2022) Estimating national and sub-national habitual nutrient intake distributions of global diets. The American Journal of Clinical Nutrition 116(2): 551-560. [[link]](https://academic.oup.com/ajcn/article/116/2/551/6605334)
 
 
 ## Repository structure
@@ -40,11 +40,11 @@ A vignette illustrating the functionality of the "nutriR" package is available h
 
 Please cite the R package functions as:
 
-* Free CM, Passarelli S, Allen LH, Beal T, Biltoft-Jensen AP, Bromage S, Cao L, Castellanos-Guitiérrez A, Christensen T, Crispim SP, Dekkers A, De Ridder K, Gicevic S, Lee C, Li Y, Moursi M, Moyersoen I, Batis C, Schmidhuber J, Shepon A, Viana DF, Golden CD (2021) nutriR: Nutritional intake functions for R. Available at: https://github.com/cfree14/nutriR
+* Free CM, Passarelli S, Allen LH, Batis C, Beal T, Biltoft-Jensen AP, Bromage S, Cao L, Castellanos-Guitiérrez A, Christensen T, Crispim SP, Dekkers A, De Ridder K, Kronsteiner-Gicevic S, Lee C, Li Y, Moursi M, Moyersoen I, Schmidhuber J, Shepon A, Viana DF, Golden CD (2021) nutriR: Nutritional intake functions for R. Available at: https://github.com/cfree14/nutriR
 
 Please cite the data served in the R package as:
 
-* Passarelli S, Free CM, Allen LH, Beal T, Biltoft-Jensen AP, Bromage S, Cao L, Castellanos-Guitiérrez A, Christensen T, Crispim SP, Dekkers A, De Ridder K, Gicevic S, Lee C, Li Y, Moursi M, Moyersoen I, Batis C, Schmidhuber J, Shepon A, Viana DF, Golden CD (in prep) Estimating national and sub-national habitual nutrient intake distributions of global diets. _Near submission._
+* Passarelli S, Free CM, Allen LH, Batis C, Beal T, Biltoft-Jensen AP, Bromage S, Cao L, Castellanos-Guitiérrez A, Christensen T, Crispim SP, Dekkers A, De Ridder K, Kronsteiner-Gicevic S, Lee C, Li Y, Moursi M, Moyersoen I, Schmidhuber J, Shepon A, Viana DF, Golden CD (2022) Estimating national and sub-national habitual nutrient intake distributions of global diets. The American Journal of Clinical Nutrition 116(2): 551-560. [[link]](https://academic.oup.com/ajcn/article/116/2/551/6605334)
 
 
 ## The "nutriR" R Shiny web application
