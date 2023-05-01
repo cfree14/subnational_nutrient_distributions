@@ -36,7 +36,7 @@ The package includes functions to:
 
 It also includes the habitual intake distributions documented in this paper as well as other important human nutrition datasets.
 
-A vignette illustrating the functionality of the "nutriR" package is available here: https://marine.rutgers.edu/~cfree/wp-content/uploads/nutriR-vignette.html
+A vignette illustrating the functionality of the "nutriR" package is available here: https://chrismfree.com/wp-content/uploads/nutriR-vignette.html
 
 Please cite the R package functions as:
 
