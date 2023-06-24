@@ -93,13 +93,13 @@ g <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
   geom_text(data=data2_ordered, aes(x=iso3, y=nutrient, label=perc_label, color=text_color),
             size=1.6, inherit.aes = F, show.legend = F) +
   # Labels
-  labs(x="", y="", tag="A") +
+  labs(x="", y="") +
   # Text legend
   # scale_color_gradient2(name="", midpoint=50,
   #                       low="black", high="white", lim=c(0,100)) +
   scale_color_manual(name="", values=c("black", "white")) +
   # Fill legend
-  scale_fill_gradientn(name="Mean %\ninadequate intake\n(probability approach)",
+  scale_fill_gradientn(name="% inadequate intake",
                        colors=RColorBrewer::brewer.pal(9, "YlOrRd"),
                        lim=c(0,100), na.value = "grey90") +
   guides(fill = guide_colorbar(ticks.colour = "black", frame.colour = "black")) +
@@ -108,7 +108,7 @@ g <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
   theme(plot.title=element_blank(),
         axis.title=element_blank(),
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  theme(legend.position = "right",
+  theme(legend.position = "top",
         legend.key.size = unit(0.4, "cm"),
         legend.background = element_rect(fill=alpha('blue', 0)),
         legend.margin = margin(0,0,0,0),
@@ -117,7 +117,7 @@ g
 
 # Export
 ggsave(g, filename=file.path(plotdir, "FigX_inadequacies_10-14_for_ty.png"),
-       width=6.5, height=5, units="in", dpi=600)
+       width=6.5, height=3.5, units="in", dpi=600)
 
 
 
