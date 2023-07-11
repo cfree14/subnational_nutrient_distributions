@@ -25,10 +25,9 @@ data_orig <- readRDS(file.path(datadir, "nutrient_intake_distributions_31countri
 
 # Build data for raster
 data2 <- data_orig %>%
-  mutate(nutrient_type=recode(nutrient_type, "Other macronutrient"="Other\nmacronutrient")) %>%
-  # mutate(sex=recode(sex, "Males"="Men", "Females"="Women")) %>%
+  # Reduce to groups of interest
   filter(sex!="Children") %>%
-  filter(age_group=="10-14") %>%
+  filter(age_group %in% c("10-14", "15-19", "20-24")) %>%
   # FIlter to EAR/SEV
   filter(!is.na(sev)) %>%
   # Mean SEV by country, nutrient, sex (so across age groups)
@@ -116,7 +115,7 @@ g <- ggplot(data2_ordered, aes(x=iso3, y=nutrient, fill=sev)) +
 g
 
 # Export
-ggsave(g, filename=file.path(plotdir, "FigX_inadequacies_10-14_for_ty.png"),
+ggsave(g, filename=file.path(plotdir, "FigX_inadequacies_10-24_for_ty.png"),
        width=6.5, height=3.5, units="in", dpi=600)
 
 
